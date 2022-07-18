@@ -1,0 +1,23 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/SemyonSt/frontend-project-lvl3/workflows/hexlet-check/badge.svg)](https://github.com/SemyonSt/frontend-project-lvl3/actions)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SemyonSt/frontend-project-lvl3.git"
+  },
+  "author": "Semyon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SemyonSt/frontend-project-lvl3/issues"
+  },
+  "type": "module",
+  "homepage": "https://github.com/SemyonSt/frontend-project-lvl3#readme",
+  "dependencies": {
+    "bootstrap": "^5.2.0-beta1"
+  }
+}
