@@ -21,7 +21,11 @@
   },
   "homepage": "https://github.com/SemyonSt/frontend-project-lvl3#readme",
   "dependencies": {
-    "bootstrap": "^5.2.0-beta1"
+    "axios": "^0.27.2",
+    "bootstrap": "^5.2.0-beta1",
+    "lodash": "^4.17.21",
+    "on-change": "^4.0.1",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.18.9",

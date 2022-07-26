@@ -20,10 +20,7 @@ module.exports = {
             },
           },
           { test: /\.css$/, use: ['style-loader', 'css-loader', 'postcss-loader'] },
-          {
-            test: /\.scss$/,
-            use: ['style-loader', 'css-loader', 'sass-loader', 'postcss-loader'],
-          },
+        
           {
             test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
             use: 'url-loader?limit=10000',
