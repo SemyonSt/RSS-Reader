@@ -3,18 +3,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import * as yup from 'yup';
 import onChange from 'on-change';
 
-let schema = yup.object().shape({
-    website: yup.string().url()
-});
-/*
-const state = onChange({
+let schema = yup.string().url().required()
+
+const state = {
     form: {
         valid: true,
         processState: 'filling',
         processError: null,
+        data: []
     }
-});
-*/
+};
+
 const errorMessages = {
     duplicateLink: 'RSS уже существует',
     fieldRequired: 'Не должно быть пустым',
@@ -24,10 +23,7 @@ const errorMessages = {
 
 const validate = (fields) => {
     try {
-        schema.validateSync(
-            { website: fields },
-            { abortEarly: false },
-          );
+        schema.validateSync(fields);
       return 'Valid';
     } catch (e) {
       return 'error'
@@ -41,12 +37,18 @@ const elements ={
     feedBack: document.querySelector('.feedback'),
 }
 
-//console.log(elements.input);
 
-elements.input.addEventListener('submit', (e) => {
+
+elements.form.addEventListener('submit', async (e) => {
     e.preventDefault()
-    console.log(input.value)
-    // if(validate(121) !== "Valid") {
-    //     e.textContent = errorMessages.invalidURL
-    // }
+    const data = new FormData(e.target);
+    const url = data.get('url');
+    //console.log(validate(url))
+    if(validate(url) !== 'Valid') {
+        elements.feedBack.textContent = errorMessages.invalidURL
+        elements.input.classList.add('is-invalid')
+        state.form.data.push(url)
+        console.log(state.form.data);
+    }
+    
 })
