@@ -56,6 +56,7 @@ elements.form.addEventListener('submit', async (e) => {
     if(validate(url) !== 'Valid') {
         elements.feedBack.textContent = errorMessages.invalidURL
         elements.feedBack.classList.replace('text-success', 'text-danger')
+        elements.input.classList.add('is-invalid')
         elements.input.classList.replace('is-valid', 'is-invalid')
         
     };
@@ -64,6 +65,7 @@ elements.form.addEventListener('submit', async (e) => {
         elements.feedBack.textContent = message.valid
         elements.feedBack.classList.replace('text-danger', 'text-success');
         elements.input.classList.add('is-valid')
+        elements.input.classList.replace('is-invalid', 'is-valid')
         state.form.data.push(url)
         elements.form.reset();
         
