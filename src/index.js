@@ -17,19 +17,13 @@ const state = {
     btn: document.querySelector('.h-100 '),
     feedBack: document.querySelector('.feedback'),
   },
-  message: {
-    valid: 'RSS успешно загружен',
-  },
-  errorMessages: {
-    duplicateLink: 'RSS уже существует',
-    fieldRequired: 'Не должно быть пустым',
-    invalidURL: 'Ссылка должна быть валидным URL',
-  },
+  message: '',
+
 };
-console.log(state.form.data);
+console.log(state.form.valid);
 
 const watchedState = onChange(state, () => {
-  console.log(state);
+  //console.log(state);
   if (state.form.valid === true) {
     return successInput(state);
   }
@@ -40,6 +34,7 @@ state.elements.form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = new FormData(e.target);
   const url = data.get('url');
-
+  //console.log(validate(watchedState, url))
   validate(watchedState, url);
+  
 });
