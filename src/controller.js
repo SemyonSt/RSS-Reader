@@ -1,25 +1,26 @@
 import * as yup from 'yup';
 
-const schema = yup.string().url('Ссылка должна быть валидным URL').required();
+const validate = async (i18n, state, url) => {
+  yup.setLocale({
+    mixed: {
+      notOneOf: 'notValidDouble',
+    },
+    string: {
+      url: 'notValidUrl',
+    },
+  });
 
-const validate = async (state, url) => {
-  // yup.setLocale({
-  //   mixed: {
-  //     default: 'RSS уже существует',
-  //   },
-  //   string: {
-  //     url: 'Ссылка должна быть валидным URL',
-  //   },
-  // });
+  const schema = yup.string().url().required();
+
   try {
-    await schema.notOneOf(state.form.data, 'RSS уже существует').validate(url);
+    await schema.notOneOf(state.form.data).validate(url);
     state.form.valid = true;
     state.form.data.push(url);
-    state.message= 'RSS успешно загружен'
-
+    state.message = 'validRss';
   } catch (err) {
     state.form.valid = false;
-    state.message = err.errors[0];
+    state.message = err.errors;
+    // console.log(err.errors.map((err) => i18n.t(err.key)));
   }
 };
 

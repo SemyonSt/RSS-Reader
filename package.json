@@ -23,6 +23,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "bootstrap": "^5.2.0-beta1",
+    "i18next": "^21.9.1",
     "lodash": "^4.17.21",
     "on-change": "^4.0.1",
     "yup": "^0.32.11"

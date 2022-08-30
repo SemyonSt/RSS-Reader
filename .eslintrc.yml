@@ -6,4 +6,7 @@ extends:
 parserOptions:
   ecmaVersion: latest
   sourceType: module
-rules: {}
+ignorePatterns:
+  - dist
+rules:
+  no-param-reassign: 0

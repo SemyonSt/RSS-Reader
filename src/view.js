@@ -1,5 +1,5 @@
 export const dangerInput = (state) => {
-  state.elements.feedBack.textContent = state.message;;
+  state.elements.feedBack.textContent = state.message;
   state.elements.feedBack.classList.replace('text-success', 'text-danger');
   state.elements.input.classList.add('is-invalid');
   state.elements.input.classList.replace('is-valid', 'is-invalid');
@@ -13,4 +13,4 @@ export const successInput = (state) => {
   state.elements.form.reset();
   state.elements.form.focus();
 };
-//test git
+// test git
