@@ -4,7 +4,7 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 import { successInput, dangerInput } from './view';
 import validate from './controller';
-import lng from './locales/ru';
+import resources from './locales/index';
 
 const runApp = async () => {
   const state = {
@@ -22,27 +22,26 @@ const runApp = async () => {
     },
     message: '',
   };
-  const i18n = i18next.createInstance();
-  i18n.init({
+  // const i18n = i18next.createInstance();
+  i18next.init({
     lng: 'ru',
     debug: true,
-    resources: lng,
+    resources,
   }).then(() => {
-    state;
-  });
-
-  const watchedState = onChange(state, () => {
-    // console.log(state);
-    if (state.form.valid === true) {
-      return successInput(state);
-    }
-    return dangerInput(state);
-  });
-  state.elements.form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    const url = data.get('url');
-    validate(i18n, watchedState, url);
+    const watchedState = onChange(state, () => {
+      // console.log(state);
+      if (state.form.valid === true) {
+        return successInput(state);
+      }
+      return dangerInput(state);
+    });
+    state.elements.form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      const url = data.get('url');
+      validate(i18next, watchedState, url);
+      console.log(i18next.t('notValidUrl'));
+    });
   });
 };
 
