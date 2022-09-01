@@ -3,10 +3,10 @@ import * as yup from 'yup';
 const validate = async (i18n, state, url) => {
   yup.setLocale({
     mixed: {
-      notOneOf: 'notValidDouble',
+      notOneOf: i18n.t('notValidDouble'),
     },
     string: {
-      url: 'notValidUrl',
+      url: i18n.t('notValidUrl'),
     },
   });
 
@@ -16,7 +16,7 @@ const validate = async (i18n, state, url) => {
     await schema.notOneOf(state.form.data).validate(url);
     state.form.valid = true;
     state.form.data.push(url);
-    state.message = 'validRss';
+    state.message = i18n.t('validRss');
   } catch (err) {
     state.form.valid = false;
     state.message = err.errors;

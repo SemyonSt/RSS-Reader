@@ -4,7 +4,7 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 import { successInput, dangerInput } from './view';
 import validate from './controller';
-import resources from './locales/index';
+import ru from './locales/index';
 
 const runApp = async () => {
   const state = {
@@ -26,10 +26,9 @@ const runApp = async () => {
   i18next.init({
     lng: 'ru',
     debug: true,
-    resources,
+    resources: { ru },
   }).then(() => {
     const watchedState = onChange(state, () => {
-      // console.log(state);
       if (state.form.valid === true) {
         return successInput(state);
       }
@@ -40,7 +39,7 @@ const runApp = async () => {
       const data = new FormData(e.target);
       const url = data.get('url');
       validate(i18next, watchedState, url);
-      console.log(i18next.t('notValidUrl'));
+      // console.log(i18next.t('notValidUrl'));
     });
   });
 };
