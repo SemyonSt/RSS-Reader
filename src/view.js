@@ -16,8 +16,7 @@ export const successInput = (state) => {
 
 export const posts = (state) => {
   state.posts.forEach(({ titles, links, descriptions }) => {
-    const li = document.createElement('li');
-    li.textContent = titles.li;
-    state.elements.posts.textContent = titles;
+    state.elements.posts.innerHTML = `<li>${titles}</li>`;
   });
+  // state.elements.posts.innerHTML = `<li>123</li>`
 };

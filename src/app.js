@@ -47,7 +47,7 @@ const runApp = async () => {
     postsUrl: [],
 
   };
-  // console.log('!!!!!!!!!!!!!!!!!!!!!', state.posts);
+  console.log('!!!!!!!!!!!!!!!!!!!!!', state.posts);
 
   i18next.init({
     lng: 'ru',
