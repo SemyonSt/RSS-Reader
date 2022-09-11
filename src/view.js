@@ -13,4 +13,11 @@ export const successInput = (state) => {
   state.elements.form.reset();
   state.elements.form.focus();
 };
-// test git
+
+export const posts = (state) => {
+  state.posts.forEach(({ titles, links, descriptions }) => {
+    const li = document.createElement('li');
+    li.textContent = titles.li;
+    state.elements.posts.textContent = titles;
+  });
+};

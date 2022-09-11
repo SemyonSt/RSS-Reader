@@ -1,14 +1,20 @@
 import onChange from 'on-change';
 import i18next from 'i18next';
-import { successInput, dangerInput } from './view';
+import { successInput, dangerInput, posts } from './view';
 import validate from './controller';
 import ru from './locales/index';
 
 const parse = (data) => {
   const parser = new DOMParser();
-
-  const doc1 = parser.parseFromString(data, "application/xml");
-  return doc1;
+  const dom = parser.parseFromString(data, 'application/xml');
+  // console.log(dom);
+  const domItem = dom.querySelectorAll('item');
+  return Array.from(domItem).map((item) => {
+    const titles = item.querySelector('title').innerHTML;
+    const links = item.querySelector('link').innerHTML;
+    const descriptions = item.querySelector('description').innerHTML;
+    return { titles, links, descriptions };
+  });
 };
 
 const runApp = async () => {
@@ -18,8 +24,10 @@ const runApp = async () => {
         if (response.ok) return response.json();
         throw new Error('Network response was not ok.');
       })
-      .then((data) => console.log(data.contents));
+      .then((data) => data.contents)
+      .then((xml) => parse(xml).map((i) => state.posts.push(i)));
   };
+
   const state = {
     form: {
       valid: true,
@@ -32,9 +40,14 @@ const runApp = async () => {
       input: document.querySelector('#url-input'),
       btn: document.querySelector('.h-100 '),
       feedBack: document.querySelector('.feedback'),
+      posts: document.querySelector('.posts'),
     },
     message: '',
+    posts: [],
+    postsUrl: [],
+
   };
+  // console.log('!!!!!!!!!!!!!!!!!!!!!', state.posts);
 
   i18next.init({
     lng: 'ru',
@@ -50,11 +63,10 @@ const runApp = async () => {
     state.elements.form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = new FormData(e.target);
-      const url = data.get('url');
+      const url = data.get('url').trim();
       validate(i18next, watchedState, url);
-      // console.log(t('notValidUrl'));
       getRss(url);
-      console.log(parse(getRss('https://ru.hexlet.io/lessons.rss')));
+      posts(state);
     });
   });
 };
