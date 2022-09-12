@@ -15,8 +15,8 @@ export const successInput = (state) => {
 };
 
 export const posts = (state) => {
-  state.posts.forEach(({ titles, links, descriptions }) => {
-    state.elements.posts.innerHTML = `<li>${titles}</li>`;
+  state.posts.map(({ titles, links, descriptions }) => {
+    state.elements.posts.innerHTML = `<li> <a href=${links}>${titles}</a></li>`;
   });
   // state.elements.posts.innerHTML = `<li>123</li>`
 };
