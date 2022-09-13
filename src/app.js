@@ -25,8 +25,8 @@ const runApp = async () => {
         throw new Error('Network response was not ok.');
       })
       .then((data) => data.contents)
-      .then((xml) => parse(xml).map((i) => state.posts.push(i)))
-      .then(() => posts(state.posts));
+      .then((xml) => parse(xml).map((i) => state.posts.push(i)));
+    // .then(() => posts(state.posts));
   };
 
   const state = {
@@ -48,7 +48,7 @@ const runApp = async () => {
     postsUrl: [],
 
   };
-  console.log('!!!!!!!!!!!!!!!!!!!!!', state.posts);
+  // console.log('!!!!!!!!!!!!!!!!!!!!!', state.posts);
 
   i18next.init({
     lng: 'ru',
@@ -67,7 +67,7 @@ const runApp = async () => {
       const url = data.get('url').trim();
       validate(i18next, watchedState, url);
       getRss(url);
-      //posts(state);
+      posts(state);
     });
   });
 };

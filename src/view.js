@@ -15,8 +15,25 @@ export const successInput = (state) => {
 };
 
 export const posts = (state) => {
-  state.posts.map(({ titles, links, descriptions }) => {
-    state.elements.posts.innerHTML = `<li> <a href=${links}>${titles}</a></li>`;
+  const ul = document.createElement('ul');
+  ul.classList.add('list-group', 'border-0', 'rounded-0');
+  state.elements.posts.append(ul);
+
+  state.posts.forEach(({ titles, links }) => {
+    const li = document.createElement('li');
+    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+
+    const a = document.createElement('a');
+    a.classList.add('fw-bold');
+    a.textContent = titles;
+    a.setAttribute('href', links);
+
+    const button = document.createElement('button');
+    button.textContent = 'Просмотр';
+    button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+
+    li.append(a, button);
+    ul.append(li);
   });
   // state.elements.posts.innerHTML = `<li>123</li>`
 };
