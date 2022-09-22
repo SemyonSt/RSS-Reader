@@ -1,5 +1,6 @@
 import onChange from 'on-change';
 import i18next from 'i18next';
+import * as _ from 'lodash';
 import { successInput, dangerInput, posts } from './view';
 import validate from './controller';
 import ru from './locales/index';
@@ -20,9 +21,7 @@ const parse = (data) => {
     const descriptions = item.querySelector('description').innerHTML;
     return { titles, links, descriptions };
   });
-  // console.log(feedName, feedPosts)
   return { feedName, feedPosts };
-  // return feedPosts
 };
 
 const runApp = async () => {
@@ -67,7 +66,7 @@ const runApp = async () => {
     postsName: {},
 
   };
-  console.log('!!!!!!!!!!!!!!!!!!!!!', state.postsName.description);
+  console.log('!!!!!!!!!!!!!!!!!!!!!', state.posts);
   i18next.init({
     lng: 'ru',
     // debug: true,
