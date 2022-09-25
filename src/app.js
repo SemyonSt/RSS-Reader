@@ -25,6 +25,14 @@ const parse = (data) => {
 };
 
 const runApp = async () => {
+  const uniq = (arr) => {
+    const seen = {};
+    return arr.filter((x) => {
+      const key = JSON.stringify(x);
+      return !(key in seen) && (seen[key] = x);
+    });
+  };
+
   const getRss = (url) => {
     fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
       .then((response) => {
@@ -36,14 +44,18 @@ const runApp = async () => {
           const error = new Error('Ресурс не содержит валидный RSS');
           throw error;
         }
+        //console.log(data.contents;
         return data.contents;
       })
-      .catch((error) => state.message = error)
+      .catch((error) => {
+        console.log(error);
+        state.message = error;
+      })
       .then((xml) => {
         parse(xml).feedPosts.map((i) => state.posts.push(i));
         Object.assign(state.postsName, parse(xml).feedName);
       })
-      .then(() => posts(state));
+      .then(() => uniq(posts(state)));
   };
 
   const state = {
@@ -66,7 +78,7 @@ const runApp = async () => {
     postsName: {},
 
   };
-  console.log('!!!!!!!!!!!!!!!!!!!!!', state.posts);
+  //console.log('!!!!!!!', state.posts);
   i18next.init({
     lng: 'ru',
     // debug: true,
@@ -74,6 +86,7 @@ const runApp = async () => {
   }).then((t) => {
     const watchedState = onChange(state, () => {
       if (state.form.valid === true) {
+        uniq(state.posts);
         return successInput(state);
       }
       return dangerInput(state);

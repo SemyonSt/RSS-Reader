@@ -19,17 +19,17 @@ export const posts = (state) => {
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   state.elements.posts.append(ul);
 
-  const uniq = (arr) => {
-    const seen = {};
-    return arr.filter((x) => {
-      const key = JSON.stringify(x);
-      return !(key in seen) && (seen[key] = x);
-    });
-  };
+  // const uniq = (arr) => {
+  //   const seen = {};
+  //   return arr.filter((x) => {
+  //     const key = JSON.stringify(x);
+  //     return !(key in seen) && (seen[key] = x);
+  //   });
+  // };
 
-  const uniqPosts = uniq(state.posts);
-  console.log('Unikalka', uniqPosts);
-  uniqPosts.forEach(({ titles, links }) => {
+  // const uniqPosts = uniq(state.posts);
+  // console.log('Unikalka', uniqPosts);
+  state.posts.forEach(({ titles, links }) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
