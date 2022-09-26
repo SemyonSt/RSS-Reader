@@ -34,6 +34,7 @@ const runApp = async () => {
   };
 
   const getRss = (url, state) => {
+    //console.log(uniq(state.posts))
     fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
       .then((response) => {
         if (response.ok) return response.json();
@@ -54,8 +55,14 @@ const runApp = async () => {
       .then((xml) => {
         parse(xml).feedPosts.map((i) => state.posts.push(i));
         Object.assign(state.postsName, parse(xml).feedName);
+        return uniq(state.posts);
       })
-      .then(() => uniq(posts(state)));
+      .then((q) => {
+        console.log('kakakakkakakak', q)
+        state.posts = q;
+        console.log('POSTIII', state)
+        posts(state)
+      });
   };
 
   const state = {
