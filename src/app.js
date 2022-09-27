@@ -1,7 +1,7 @@
 import onChange from 'on-change';
 import i18next from 'i18next';
 import * as _ from 'lodash';
-import { successInput, dangerInput, posts } from './view';
+import { successInput, dangerInput, invalidRSS, posts } from './view';
 import validate from './controller';
 import ru from './locales/index';
 
@@ -34,7 +34,7 @@ const runApp = async () => {
   };
 
   const getRss = (url, state) => {
-    //console.log(uniq(state.posts))
+    // console.log(uniq(state.posts))
     fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
       .then((response) => {
         if (response.ok) return response.json();
@@ -43,6 +43,7 @@ const runApp = async () => {
       .then((data) => {
         if (data.contents === null) {
           const error = new Error('Ресурс не содержит валидный RSS');
+          state.form.valid = 'lol';
           throw error;
         }
         // console.log(data.contents;
@@ -50,7 +51,8 @@ const runApp = async () => {
       })
       .catch((error) => {
         console.log(error);
-        state.message = error;
+        state.message.message= error;
+        console.log('1FFFFFFFASD', state.message.message)
       })
       .then((xml) => {
         parse(xml).feedPosts.map((i) => state.posts.push(i));
@@ -58,10 +60,9 @@ const runApp = async () => {
         return uniq(state.posts);
       })
       .then((q) => {
-        console.log('kakakakkakakak', q)
-        state.posts = q;
-        console.log('POSTIII', state)
-        posts(state)
+        if (state.form.valid === true) {
+          posts(state);
+        }
       });
   };
 
@@ -90,15 +91,15 @@ const runApp = async () => {
     lng: 'ru',
     // debug: true,
     resources: { ru },
-  }).then((t) => {
+  }).then(() => {
     const watchedState = onChange(state, () => {
+      console.log('STAAAAAAAATE', state)
       if (state.form.valid === true) {
-        // uniq(state.posts);
         return successInput(state);
       }
       return dangerInput(state);
     });
-    state.elements.form.addEventListener('submit', async (e) => {
+    state.elements.form.addEventListener('submit', (e) => {
       e.preventDefault();
       const data = new FormData(e.target);
       const url = data.get('url').trim();

@@ -14,6 +14,15 @@ export const successInput = (state) => {
   state.elements.form.focus();
 };
 
+export const invalidRSS = (state) => {
+  state.elements.feedBack.textContent = state.message;
+  state.elements.feedBack.classList.replace('text-danger', 'text-success');
+  state.elements.input.classList.add('is-valid');
+  state.elements.input.classList.replace('is-invalid', 'is-valid');
+  state.elements.form.reset();
+  state.elements.form.focus();
+};
+
 export const posts = (state) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
