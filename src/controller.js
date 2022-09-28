@@ -26,7 +26,7 @@ const uniq = (arr) => {
     return !(key in seen) && (seen[key] = x);
   });
 };
-const getRss = (url, state) => {
+const getRss = (url, state, watchedState) => {
   // console.log(uniq(state.posts))
   fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
     .then((response) => {
@@ -36,6 +36,8 @@ const getRss = (url, state) => {
     .then((data) => {
       if (data.contents === null) {
         const error = new Error('Ресурс не содержит валидный RSS');
+        watchedState.form.valid = false;
+        watchedState.message = error.message;
         throw error;
       }
       // console.log(data.contents);
@@ -73,7 +75,7 @@ const validate = async (i18n, watchedState, url, state) => {
       watchedState.form.valid = true;
       watchedState.form.data.push(url);
       watchedState.message = i18n.t('validRss');
-      getRss(url, state);
+      getRss(url, state, watchedState);
     })
     .catch((err) => {
       console.log(err);
