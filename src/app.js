@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import {
   successInput, dangerInput, invalidRSS, posts,
 } from './view';
-import validate from './controller';
+import getRss from './controller';
 import ru from './locales/index';
 
 const runApp = async () => {
@@ -41,11 +41,11 @@ const runApp = async () => {
       }
       return dangerInput(state);
     });
-    state.elements.form.addEventListener('submit', (e) => {
+    state.elements.form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = new FormData(e.target);
       const url = data.get('url').trim();
-      validate(i18next, watchedState, url, state);
+      getRss(url, state, watchedState, i18next);
       // console.log(validate(i18next, watchedState, url));
       // getRss(url, state);
     });
