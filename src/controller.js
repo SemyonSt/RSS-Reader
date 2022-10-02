@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import axios from 'axios';
 import { posts } from './view';
 
 const uniq = (arr) => {
@@ -49,25 +50,23 @@ const parse = (data) => {
 };
 
 const getRss = (url, state, watchedState, i18n) => {
-  fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
+  validate(i18n, watchedState, url, state)
+    .then(() => {
+      watchedState.form.valid = 'loading';
+      return fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`);
+    })
     .then((response) => {
-      console.log(response);
       if (response.ok) return response.json();
       throw new Error('Network response was not ok.');
     })
-    .then((data) => data.contents)
-    .then((xml) => {
-      parse(xml).feedPosts.map((i) => state.posts.push(i));
-      Object.assign(state.postsName, parse(xml).feedName);
-    })
-
-    .then(() => validate(i18n, watchedState, url, state))
-    .then(() => {
+    .then((data) => {
       watchedState.form.valid = true;
       watchedState.form.data.push(url);
       watchedState.message = i18n.t('validRss');
+      parse(data.contents).feedPosts.map((i) => state.posts.push(i));
+      Object.assign(state.postsName, parse(data.contents).feedName);
+      posts(state);
     })
-    .then(() => posts(state))
     .catch((err) => {
       watchedState.form.valid = false;
       watchedState.message = err.message;

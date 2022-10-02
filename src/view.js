@@ -14,13 +14,14 @@ export const successInput = (state) => {
   state.elements.form.focus();
 };
 
-export const invalidRSS = (state) => {
-  state.elements.feedBack.textContent = state.message;
-  state.elements.feedBack.classList.replace('text-danger', 'text-success');
-  state.elements.input.classList.add('is-valid');
-  state.elements.input.classList.replace('is-invalid', 'is-valid');
-  state.elements.form.reset();
-  state.elements.form.focus();
+export const loadingProcess = (state) => {
+  if (state.form.valid === 'loading') {
+    state.elements.input.disabled = true;
+    state.elements.btn.disabled = true;
+  } else {
+    state.elements.input.disabled = false;
+    state.elements.btn.disabled = false;
+  }
 };
 
 export const posts = (state) => {
