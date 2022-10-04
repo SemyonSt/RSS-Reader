@@ -2,14 +2,6 @@ import * as yup from 'yup';
 import axios from 'axios';
 import { posts } from './view';
 
-const uniq = (arr) => {
-  const seen = {};
-  return arr.filter((x) => {
-    const key = JSON.stringify(x);
-    return !(key in seen) && (seen[key] = x);
-  });
-};
-
 const validate = async (i18n, watchedState, url) => {
   yup.setLocale({
     mixed: {
@@ -49,23 +41,40 @@ const parse = (data) => {
   return { feedName, feedPosts };
 };
 
+const getData = (url) => axios
+  .get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
+  .then((response) => response.data)
+  .catch(() => { throw new Error('Network response was not ok.'); });
+
+const uniq = (arr) => {
+  const seen = {};
+  return arr.filter((x) => {
+    const key = JSON.stringify(x);
+    return !(key in seen) && (seen[key] = x);
+  });
+};
+const updatePost = (url, state, watchedState, i18n) => {
+  getData(url)
+    .then((data) => {
+      parse(data.contents).feedPosts.map((i) => state.posts.push(i));
+      Object.assign(state.postsName, parse(data.contents).feedName);
+      uniq(state.posts);
+      posts(state);
+    })
+    .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
+};
+
 const getRss = (url, state, watchedState, i18n) => {
   validate(i18n, watchedState, url, state)
     .then(() => {
       watchedState.form.valid = 'loading';
-      return fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`);
+      return getData(url);
     })
-    .then((response) => {
-      if (response.ok) return response.json();
-      throw new Error('Network response was not ok.');
-    })
-    .then((data) => {
+    .then(() => {
+      updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
       watchedState.form.data.push(url);
       watchedState.message = i18n.t('validRss');
-      parse(data.contents).feedPosts.map((i) => state.posts.push(i));
-      Object.assign(state.postsName, parse(data.contents).feedName);
-      posts(state);
     })
     .catch((err) => {
       watchedState.form.valid = false;

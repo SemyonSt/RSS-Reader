@@ -25,10 +25,17 @@ export const loadingProcess = (state) => {
 };
 
 export const posts = (state) => {
+  const uniq = (arr) => {
+    const seen = {};
+    return arr.filter((x) => {
+      const key = JSON.stringify(x);
+      return !(key in seen) && (seen[key] = x);
+    });
+  };
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   state.elements.posts.append(ul);
-
+  // console.log(uniq(state.posts))
   state.posts.forEach(({ titles, links }) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
@@ -73,4 +80,8 @@ export const posts = (state) => {
   ul2.append(li);
   li.append(h3, p);
   state.elements.feeds.append(div, ul2);
+};
+
+export const modal = () => {
+
 };

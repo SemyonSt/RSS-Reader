@@ -20,13 +20,14 @@ const runApp = async () => {
       feedBack: document.querySelector('.feedback'),
       posts: document.querySelector('.posts'),
       feeds: document.querySelector('.feeds'),
+      btnPost: document.querySelector('.btn'),
     },
     message: '',
     posts: [],
     postsName: {},
 
   };
-  // console.log('!!!!!!!', state.posts);
+
   i18next.init({
     lng: 'ru',
     // debug: true,
