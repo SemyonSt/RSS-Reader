@@ -46,20 +46,28 @@ const getData = (url) => axios
   .then((response) => response.data)
   .catch(() => { throw new Error('Network response was not ok.'); });
 
-const uniq = (arr) => {
-  const seen = {};
-  return arr.filter((x) => {
-    const key = JSON.stringify(x);
-    return !(key in seen) && (seen[key] = x);
-  });
+// const uniq = (arr) => {
+//   const seen = {};
+//   return arr.filter((x) => {
+//     const key = JSON.stringify(x);
+//     return !(key in seen) && (seen[key] = x);
+//   });
+// };
+const uniq = (arr1, arr2) => {
+  const m = arr1.map((i) => i.title);
+  return arr2.filter((i) => m.includes(i.title));
 };
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
       parse(data.contents).feedPosts.map((i) => state.posts.push(i));
-      Object.assign(state.postsName, parse(data.contents).feedName);
-      uniq(state.posts);
-      posts(state);
+      const newPost = uniq(watchedState.posts, parse(data.contents).feedPosts);
+      console.log(newPost);
+      if (newPost.length >= 1) {
+        newPost.forEach((element) => {
+          watchedState.posts.push(element);
+        });
+      }
     })
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
 };
@@ -70,7 +78,14 @@ const getRss = (url, state, watchedState, i18n) => {
       watchedState.form.valid = 'loading';
       return getData(url);
     })
-    .then(() => {
+    .then((data) => {
+      console.log(parse(data.contents));
+      console.log('STAAAATE', state.posts);
+      console.log('watchedState', watchedState.posts);
+
+      parse(data.contents).feedPosts.map((i) => state.posts.push(i));
+      Object.assign(watchedState.postsName, parse(data.contents).feedName);
+      posts(state);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
       watchedState.form.data.push(url);
