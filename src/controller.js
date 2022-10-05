@@ -55,7 +55,7 @@ const getData = (url) => axios
 // };
 const uniq = (arr1, arr2) => {
   const m = arr1.map((i) => i.title);
-  return arr2.filter((i) => m.includes(i.title));
+  return arr2.filter((i) => !m.includes(i.title));
 };
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
