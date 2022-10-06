@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import axios from 'axios';
+import * as _ from 'lodash';
 import { posts } from './view';
 
 const validate = async (i18n, watchedState, url) => {
@@ -53,16 +54,18 @@ const getData = (url) => axios
 //     return !(key in seen) && (seen[key] = x);
 //   });
 // };
-const uniq = (arr1, arr2) => {
-  const m = arr1.map((i) => i.titles);
-  return arr2.filter((i) => m.includes(i.titles));
-};
+// const uniq = (arr1, arr2) => {
+//   const m = arr2.map((i) => i.titles);
+//   return arr1.filter((i) => !m.includes(i.titles));
+// };
+const uniq = (arr1, arr2) => _.differenceWith(arr1, arr2, _.isEqual);
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
       parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
       const newPost = uniq(state.posts, parse(data.contents).feedPosts);
-      console.log(newPost);
+      console.log('NEEEEEWPOOOOST', newPost);
+
       if (newPost.length >= 1) {
         newPost.forEach((element) => {
           watchedState.posts.push(element);

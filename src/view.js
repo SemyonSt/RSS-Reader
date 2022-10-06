@@ -25,13 +25,6 @@ export const loadingProcess = (state) => {
 };
 
 export const posts = (state) => {
-  const uniq = (arr) => {
-    const seen = {};
-    return arr.filter((x) => {
-      const key = JSON.stringify(x);
-      return !(key in seen) && (seen[key] = x);
-    });
-  };
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   state.elements.posts.append(ul);
