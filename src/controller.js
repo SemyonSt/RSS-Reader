@@ -54,14 +54,14 @@ const getData = (url) => axios
 //   });
 // };
 const uniq = (arr1, arr2) => {
-  const m = arr1.map((i) => i.title);
-  return arr2.filter((i) => !m.includes(i.title));
+  const m = arr1.map((i) => i.titles);
+  return arr2.filter((i) => m.includes(i.titles));
 };
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
-      parse(data.contents).feedPosts.map((i) => state.posts.push(i));
-      const newPost = uniq(watchedState.posts, parse(data.contents).feedPosts);
+      parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
+      const newPost = uniq(state.posts, parse(data.contents).feedPosts);
       console.log(newPost);
       if (newPost.length >= 1) {
         newPost.forEach((element) => {
@@ -79,12 +79,12 @@ const getRss = (url, state, watchedState, i18n) => {
       return getData(url);
     })
     .then((data) => {
-      console.log(parse(data.contents));
-      console.log('STAAAATE', state.posts);
-      console.log('watchedState', watchedState.posts);
+      // console.log(parse(data.contents));
+      // console.log('STAAAATE', state.posts);
+      // console.log('watchedState', watchedState.posts);
 
-      parse(data.contents).feedPosts.map((i) => state.posts.push(i));
-      Object.assign(watchedState.postsName, parse(data.contents).feedName);
+      parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
+      Object.assign(state.postsName, parse(data.contents).feedName);
       posts(state);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
