@@ -39,6 +39,7 @@ const parse = (data) => {
     const descriptions = item.querySelector('description').innerHTML;
     return { titles, links, descriptions };
   });
+  console.log('feposts!!!', feedPosts)
   return { feedName, feedPosts };
 };
 
@@ -58,28 +59,19 @@ const uniq = (arr1, arr2) => _.differenceWith(arr1, arr2, _.isEqual);
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
-      parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
-      const newPost = uniq(state.posts, parse(data.contents).feedPosts);
-      console.log(newPost);
-      console.log(parse(data.contents).feedPosts);
-      if (newPost.length >= 1) {
-        newPost.forEach((element) => {
-          watchedState.posts.push(element);
-          newPosts(state, newPost);
-        });
+      if (parse(data.contents).feedPosts.length > state.posts) {
+        parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
+        const newPost = uniq(state.posts, parse(data.contents).feedPosts);
+        console.log(newPost);
+        console.log(parse(data.contents).feedPosts);
+        if (newPost.length >= 1) {
+          newPost.forEach((element) => {
+            state.posts.push(element);
+            newPosts(state, newPost);
+          });
+        }
       }
-      const post123 = [
-        {titles: 'a', links: 'b', descriptions: 'd'},
-        {titles: 'b1', links: 'b', descriptions: 'd'},
-        {titles: 'b2', links: 'b', descriptions: 'd'},
-        {titles: 'b3', links: 'b22', descriptions: 'd'},
-        {titles: 'a4', links: 'b', descriptions: 'd'},
-        {titles: 'a4', links: 'b', descriptions: 'd2'},
-        {titles: 'a4', links: 'b', descriptions: 'd3'},
-        {titles: 'a1', links: 'b', descriptions: 'd'},
-        
-      ]
-      newPosts(state, post123);
+      console.log(state.posts)
     })
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
 };
