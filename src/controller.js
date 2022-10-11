@@ -46,29 +46,33 @@ const parse = (data) => {
 const getData = (url) =>
   // console.log(url)
   axios
-    .get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
+    .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
     .then((response) => response.data)
     .catch(() => { throw new Error('Network response was not ok.'); });
 
-const uniq = (arr1, arr2) => _.differenceWith(arr2, arr1, _.isEqual);
-// const uniqNewPost = (arr) => {
-//   const seen = {};
-//   return arr.filter((x) => {
-//     const key = JSON.stringify(x);
-//     return !(key in seen) && (seen[key] = x);
-//   });
-// };
+const uniq = (arr1, arr2) => _.differenceWith(arr1, arr2, _.isEqual);
+const uniqNewPost = (arr) => {
+  const seen = {};
+  return arr.filter((x) => {
+    const key = JSON.stringify(x);
+    return !(key in seen) && (seen[key] = x);
+  });
+};
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
-      parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
-      const newPost = uniq(state.posts, parse(data.contents).feedPosts);
+      const parsedData = parse(data.contents);
+      const newPost = uniqNewPost(uniq(state.posts, parsedData.feedPosts));
+      console.log('newPost', newPost);
+      // console.log('uniqNewPost', uniqNewPost(newPost));
       if (newPost.length >= 1) {
         newPost.forEach((element) => {
           state.posts.push(element);
-          newPosts(state, newPost);
         });
+        newPosts(state, newPost);
       }
+      console.log('State.Posts', state.posts);
+      console.log('UniqNewStatePosts', uniqNewPost(state.posts));
     })
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
 };

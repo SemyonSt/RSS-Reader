@@ -30,7 +30,7 @@ const runApp = async () => {
 
   i18next.init({
     lng: 'ru',
-    // debug: true,
+    debug: true,
     resources: { ru },
   }).then(() => {
     const watchedState = onChange(state, () => {
