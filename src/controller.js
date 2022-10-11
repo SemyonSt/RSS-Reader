@@ -39,16 +39,18 @@ const parse = (data) => {
     const descriptions = item.querySelector('description').innerHTML;
     return { titles, links, descriptions };
   });
-  console.log('feposts!!!', feedPosts)
+  // console.log('feposts!!!', dom)
   return { feedName, feedPosts };
 };
 
-const getData = (url) => axios
-  .get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
-  .then((response) => response.data)
-  .catch(() => { throw new Error('Network response was not ok.'); });
+const getData = (url) =>
+  // console.log(url)
+  axios
+    .get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
+    .then((response) => response.data)
+    .catch(() => { throw new Error('Network response was not ok.'); });
 
-const uniq = (arr1, arr2) => _.differenceWith(arr1, arr2, _.isEqual);
+const uniq = (arr1, arr2) => _.differenceWith(arr2, arr1, _.isEqual);
 // const uniqNewPost = (arr) => {
 //   const seen = {};
 //   return arr.filter((x) => {
@@ -59,19 +61,14 @@ const uniq = (arr1, arr2) => _.differenceWith(arr1, arr2, _.isEqual);
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
-      if (parse(data.contents).feedPosts.length > state.posts) {
-        parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
-        const newPost = uniq(state.posts, parse(data.contents).feedPosts);
-        console.log(newPost);
-        console.log(parse(data.contents).feedPosts);
-        if (newPost.length >= 1) {
-          newPost.forEach((element) => {
-            state.posts.push(element);
-            newPosts(state, newPost);
-          });
-        }
+      parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
+      const newPost = uniq(state.posts, parse(data.contents).feedPosts);
+      if (newPost.length >= 1) {
+        newPost.forEach((element) => {
+          state.posts.push(element);
+          newPosts(state, newPost);
+        });
       }
-      console.log(state.posts)
     })
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
 };
