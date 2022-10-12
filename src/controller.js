@@ -20,7 +20,7 @@ const validate = async (i18n, watchedState, url) => {
 const parse = (data) => {
   const parser = new DOMParser();
   const dom = parser.parseFromString(data, 'application/xml');
-
+//console.log(data)
   const parseError = dom.querySelector('parsererror');
   if (parseError) {
     const error = new Error('Ресурс не содержит валидный RSS');
@@ -50,29 +50,25 @@ const getData = (url) =>
     .then((response) => response.data)
     .catch(() => { throw new Error('Network response was not ok.'); });
 
-const uniq = (arr1, arr2) => _.differenceWith(arr1, arr2, _.isEqual);
-const uniqNewPost = (arr) => {
-  const seen = {};
-  return arr.filter((x) => {
-    const key = JSON.stringify(x);
-    return !(key in seen) && (seen[key] = x);
-  });
-};
+const uniq = (arr1, arr2) => _.differenceWith(arr2, arr1, _.isEqual);
+// const uniqNewPost = (arr) => {
+//   const seen = {};
+//   return arr.filter((x) => {
+//     const key = JSON.stringify(x);
+//     return !(key in seen) && (seen[key] = x);
+//   });
+// };
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
       const parsedData = parse(data.contents);
-      const newPost = uniqNewPost(uniq(state.posts, parsedData.feedPosts));
-      console.log('newPost', newPost);
-      // console.log('uniqNewPost', uniqNewPost(newPost));
+      const newPost = uniq(state.posts, parsedData.feedPosts);
       if (newPost.length >= 1) {
         newPost.forEach((element) => {
           state.posts.push(element);
         });
         newPosts(state, newPost);
       }
-      console.log('State.Posts', state.posts);
-      console.log('UniqNewStatePosts', uniqNewPost(state.posts));
     })
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
 };
