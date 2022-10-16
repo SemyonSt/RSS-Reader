@@ -29,7 +29,7 @@ export const posts = (state) => {
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   state.elements.posts.append(ul);
   // console.log(uniq(state.posts))
-  state.posts.forEach(({ titles, links }) => {
+  state.posts.forEach(({ titles, links, descriptions }, n) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
@@ -42,9 +42,16 @@ export const posts = (state) => {
     button.textContent = 'Просмотр';
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
 
+    button.setAttribute('data-bs-dismiss', 'modal');
+    button.setAttribute('data-bs-toggle', 'modal');
+    button.setAttribute('data-bs-target', '#modal');
+    a.id = n;
+    button.id = n;
+
     li.append(a, button);
     ul.append(li);
   });
+
   // Показываю "Фиды"
   const div = document.createElement('div');
   div.classList.add('card', 'border-0');
@@ -93,6 +100,10 @@ export const newPosts = (state, newposts) => {
     button.textContent = 'Просмотр';
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
 
+    button.setAttribute('data-bs-dismiss', 'modal');
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', '#modal');
+
     li.append(a, button);
     ul.append(li);
   });
@@ -105,4 +116,13 @@ export const newPosts = (state, newposts) => {
   h2.textContent = 'Фиды';
   div2.append(h2);
   div.append(div2);
+};
+
+const modal = (state) => {
+  const modalTitle = document.querySelector('.modal-title');
+  const modalDescription = document.querySelector('.modal-body');
+  const modalHref = document.querySelector('.full-article');
+  modalTitle.textContent = state.posts.titles;
+  modalDescription.textContent = state.posts.description;
+  modalHref.href = state.posts.links;
 };
