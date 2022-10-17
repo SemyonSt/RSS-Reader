@@ -1,3 +1,6 @@
+import * as _ from 'lodash';
+import { uniqueId } from 'lodash';
+
 export const dangerInput = (state) => {
   state.elements.feedBack.textContent = state.message;
   state.elements.feedBack.classList.replace('text-success', 'text-danger');
@@ -45,8 +48,8 @@ export const posts = (state) => {
     button.setAttribute('data-bs-dismiss', 'modal');
     button.setAttribute('data-bs-toggle', 'modal');
     button.setAttribute('data-bs-target', '#modal');
-    a.id = n;
-    button.id = n;
+    a.id = uniqueId();
+    button.id = a.id;
 
     li.append(a, button);
     ul.append(li);
@@ -104,6 +107,9 @@ export const newPosts = (state, newposts) => {
     button.setAttribute('data-toggle', 'modal');
     button.setAttribute('data-target', '#modal');
 
+    a.id = uniqueId();
+    button.id = a.id;
+
     li.append(a, button);
     ul.append(li);
   });
@@ -118,11 +124,20 @@ export const newPosts = (state, newposts) => {
   div.append(div2);
 };
 
-const modal = (state) => {
+export const modal = (state) => {
   const modalTitle = document.querySelector('.modal-title');
   const modalDescription = document.querySelector('.modal-body');
   const modalHref = document.querySelector('.full-article');
-  modalTitle.textContent = state.posts.titles;
-  modalDescription.textContent = state.posts.description;
-  modalHref.href = state.posts.links;
+  state.posts.forEach((i) => {
+    modalTitle.textContent = state.posts.titles;
+    modalDescription.textContent = state.posts.description;
+    modalHref.href = state.posts.links;
+  })
+};
+
+export const openPost = (state) => {
+  state.clickPosts.forEach((i) => {
+    const element = document.querySelector(`[id="${i}"]`);
+    element.classList.replace('fw-bold', 'fw-normal');
+  });
 };

@@ -1,7 +1,9 @@
 import onChange from 'on-change';
 import i18next from 'i18next';
 import * as _ from 'lodash';
-import { successInput, dangerInput, loadingProcess } from './view';
+import {
+  successInput, dangerInput, loadingProcess, openPost,
+} from './view';
 import getRss from './controller';
 import ru from './locales/index';
 
@@ -25,6 +27,8 @@ const runApp = async () => {
     message: '',
     posts: [],
     postsName: {},
+    clickPosts: [],
+    modal: '',
 
   };
 
@@ -52,6 +56,12 @@ const runApp = async () => {
       getRss(url, state, watchedState, i18next);
       // console.log(validate(i18next, watchedState, url));
       // getRss(url, state);
+    });
+    state.elements.posts.addEventListener('click', (e) => {
+      const id = e.target;
+      watchedState.clickPosts.push(id);
+      watchedState.modal = id;
+      openPost(watchedState);
     });
   });
 };

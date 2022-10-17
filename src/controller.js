@@ -20,7 +20,7 @@ const validate = async (i18n, watchedState, url) => {
 const parse = (data) => {
   const parser = new DOMParser();
   const dom = parser.parseFromString(data, 'application/xml');
-//console.log(data)
+  // console.log(data)
   const parseError = dom.querySelector('parsererror');
   if (parseError) {
     const error = new Error('Ресурс не содержит валидный RSS');
@@ -81,7 +81,7 @@ const getRss = (url, state, watchedState, i18n) => {
     })
     .then((data) => {
       // console.log(parse(data.contents));
-      // console.log('STAAAATE', state.posts);
+      console.log('STAAAATE', watchedState);
       // console.log('watchedState', watchedState.posts);
 
       parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
