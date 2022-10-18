@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { uniqueId } from 'lodash';
 
 export const dangerInput = (state) => {
@@ -32,14 +31,14 @@ export const posts = (state) => {
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   state.elements.posts.append(ul);
   // console.log(uniq(state.posts))
-  state.posts.forEach(({ titles, links, descriptions }, n) => {
+  state.posts.forEach((element) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
     const a = document.createElement('a');
     a.classList.add('fw-bold');
-    a.textContent = titles;
-    a.setAttribute('href', links);
+    a.textContent = element.titles;
+    a.setAttribute('href', element.links);
 
     const button = document.createElement('button');
     button.textContent = 'Просмотр';
@@ -50,7 +49,7 @@ export const posts = (state) => {
     button.setAttribute('data-bs-target', '#modal');
     a.id = uniqueId();
     button.id = a.id;
-
+    element.id = a.id;
     li.append(a, button);
     ul.append(li);
   });
@@ -90,14 +89,14 @@ export const newPosts = (state, newposts) => {
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   state.elements.posts.append(ul);
   // console.log(uniq(state.posts))
-  newposts.forEach(({ titles, links }) => {
+  newposts.forEach((element) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
     const a = document.createElement('a');
     a.classList.add('fw-bold');
-    a.textContent = titles;
-    a.setAttribute('href', links);
+    a.textContent = element.titles;
+    a.setAttribute('href', element.links);
 
     const button = document.createElement('button');
     button.textContent = 'Просмотр';
@@ -109,7 +108,7 @@ export const newPosts = (state, newposts) => {
 
     a.id = uniqueId();
     button.id = a.id;
-
+    element.id = a.id;
     li.append(a, button);
     ul.append(li);
   });
@@ -128,11 +127,13 @@ export const modal = (state) => {
   const modalTitle = document.querySelector('.modal-title');
   const modalDescription = document.querySelector('.modal-body');
   const modalHref = document.querySelector('.full-article');
-  state.posts.forEach((i) => {
-    modalTitle.textContent = state.posts.titles;
-    modalDescription.textContent = state.posts.description;
-    modalHref.href = state.posts.links;
-  })
+  state.posts.forEach((element) => {
+    if (element.id === state.modal) {
+      modalTitle.textContent = element.titles;
+      modalDescription.textContent = element.descriptions;
+      modalHref.href = element.links;
+    }
+  });
 };
 
 export const openPost = (state) => {

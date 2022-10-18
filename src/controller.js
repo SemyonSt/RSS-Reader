@@ -43,12 +43,10 @@ const parse = (data) => {
   return { feedName, feedPosts };
 };
 
-const getData = (url) =>
-  // console.log(url)
-  axios
-    .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
-    .then((response) => response.data)
-    .catch(() => { throw new Error('Network response was not ok.'); });
+const getData = (url) => axios
+  .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
+  .then((response) => response.data)
+  .catch(() => { throw new Error('Network response was not ok.'); });
 
 const uniq = (arr1, arr2) => _.differenceWith(arr2, arr1, _.isEqual);
 // const uniqNewPost = (arr) => {
@@ -80,10 +78,6 @@ const getRss = (url, state, watchedState, i18n) => {
       return getData(url);
     })
     .then((data) => {
-      // console.log(parse(data.contents));
-      console.log('STAAAATE', watchedState);
-      // console.log('watchedState', watchedState.posts);
-
       parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
       Object.assign(state.postsName, parse(data.contents).feedName);
       posts(state);
