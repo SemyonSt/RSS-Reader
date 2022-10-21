@@ -48,7 +48,7 @@ const getData = (url) => axios
   .then((response) => response.data)
   .catch(() => { throw new Error('Network response was not ok.'); });
 
-const uniq = (arr1, arr2) => _.differenceWith(arr2, arr1, _.isEqual);
+const uniq = (arr1, arr2) => _.differenceBy(arr2, arr1, 'titles');
 // const uniqNewPost = (arr) => {
 //   const seen = {};
 //   return arr.filter((x) => {
@@ -61,6 +61,7 @@ const updatePost = (url, state, watchedState, i18n) => {
     .then((data) => {
       const parsedData = parse(data.contents);
       const newPost = uniq(state.posts, parsedData.feedPosts);
+      console.log(newPost)
       if (newPost.length >= 1) {
         newPost.forEach((element) => {
           state.posts.push(element);
@@ -68,7 +69,7 @@ const updatePost = (url, state, watchedState, i18n) => {
         newPosts(state, newPost);
       }
     })
-    .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
+    .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 10000));
 };
 
 const getRss = (url, state, watchedState, i18n) => {

@@ -85,8 +85,8 @@ export const posts = (state) => {
 };
 
 export const newPosts = (state, newposts) => {
-  const ul = document.createElement('ul');
-  ul.classList.add('list-group', 'border-0', 'rounded-0');
+  const ul = document.querySelector('ul');
+  // ul.classList.add('list-group', 'border-0', 'rounded-0');
   state.elements.posts.append(ul);
   // console.log(uniq(state.posts))
   newposts.forEach((element) => {
@@ -109,6 +109,7 @@ export const newPosts = (state, newposts) => {
     a.id = uniqueId();
     button.id = a.id;
     element.id = a.id;
+    
     li.append(a, button);
     ul.append(li);
   });
