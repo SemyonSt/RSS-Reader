@@ -61,13 +61,17 @@ const updatePost = (url, state, watchedState, i18n) => {
     .then((data) => {
       const parsedData = parse(data.contents);
       const newPost = uniq(state.posts, parsedData.feedPosts);
-      console.log(newPost)
+      console.log(watchedState);
+
       if (newPost.length >= 1) {
+        watchedState.newP = newPost;
         newPost.forEach((element) => {
-          state.posts.push(element);
+          watchedState.posts.push(element);
+          // console.log("NEEEEEEEEEEEW", watchedState.newP);
         });
-        newPosts(state, newPost);
+        // newPosts(state, newPost);
       }
+      watchedState.newP.length = 0;
     })
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 10000));
 };

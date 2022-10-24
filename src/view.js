@@ -29,7 +29,24 @@ export const loadingProcess = (state) => {
 export const posts = (state) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
-  state.elements.posts.append(ul);
+  const divAutoPost = document.createElement('div');
+  divAutoPost.classList.add('col-md-10', 'col-lg-8', 'order-1', 'mx-auto', 'posts');
+  const divP = document.createElement('div');
+  divP.classList.add('card', 'border-0');
+  const div3 = document.createElement('div');
+  div3.classList.add('card-body');
+  const h2p = document.createElement('h2');
+  h2p.classList.add('card-title', 'h4');
+  h2p.textContent = 'Посты';
+
+  div3.append(h2p);
+  divP.append(div3);
+  // divAutoPost.append(divP);
+  // divP.append(div3);
+  // ul.append(divP);
+
+  state.elements.posts.append(div3, ul);
+
   // console.log(uniq(state.posts))
   state.posts.forEach((element) => {
     const li = document.createElement('li');
@@ -84,17 +101,19 @@ export const posts = (state) => {
   state.elements.feeds.append(div, ul2);
 };
 
-export const newPosts = (state, newposts) => {
+export const addPost = (state) => {
   const ul = document.querySelector('ul');
-  // ul.classList.add('list-group', 'border-0', 'rounded-0');
+  ul.classList.add('list-group', 'border-0', 'rounded-0');
   state.elements.posts.append(ul);
   // console.log(uniq(state.posts))
-  newposts.forEach((element) => {
+
+  state.newP.forEach((element) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
     const a = document.createElement('a');
     a.classList.add('fw-bold');
+    // const a = document.querySelector('a');
     a.textContent = element.titles;
     a.setAttribute('href', element.links);
 
@@ -103,17 +122,14 @@ export const newPosts = (state, newposts) => {
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
 
     button.setAttribute('data-bs-dismiss', 'modal');
-    button.setAttribute('data-toggle', 'modal');
-    button.setAttribute('data-target', '#modal');
-
+    button.setAttribute('data-bs-toggle', 'modal');
+    button.setAttribute('data-bs-target', '#modal');
     a.id = uniqueId();
     button.id = a.id;
     element.id = a.id;
-    
     li.append(a, button);
     ul.append(li);
   });
-  // Показываю "Фиды"
   const div = document.createElement('div');
   div.classList.add('card', 'border-0');
   const div2 = document.createElement('div');
@@ -123,6 +139,46 @@ export const newPosts = (state, newposts) => {
   div2.append(h2);
   div.append(div2);
 };
+
+// export const newPosts = (state, newposts) => {
+//   const ul = document.querySelector('ul');
+//   // ul.classList.add('list-group', 'border-0', 'rounded-0');
+//   state.elements.posts.append(ul);
+//   // console.log(uniq(state.posts))
+//   newposts.forEach((element) => {
+//     const li = document.createElement('li');
+//     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+
+//     const a = document.createElement('a');
+//     a.classList.add('fw-bold');
+//     a.textContent = element.titles;
+//     a.setAttribute('href', element.links);
+
+//     const button = document.createElement('button');
+//     button.textContent = 'Просмотр';
+//     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+
+//     button.setAttribute('data-bs-dismiss', 'modal');
+//     button.setAttribute('data-toggle', 'modal');
+//     button.setAttribute('data-target', '#modal');
+
+//     a.id = uniqueId();
+//     button.id = a.id;
+//     element.id = a.id;
+
+//     li.append(a, button);
+//     ul.append(li);
+//   });
+//   // Показываю "Фиды"
+//   const div = document.createElement('div');
+//   div.classList.add('card', 'border-0');
+//   const div2 = document.createElement('div');
+//   div2.classList.add('card-body');
+//   const h2 = document.createElement('h2');
+//   h2.textContent = 'Фиды';
+//   div2.append(h2);
+//   div.append(div2);
+// };
 
 export const modal = (state) => {
   const modalTitle = document.querySelector('.modal-title');

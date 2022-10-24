@@ -2,7 +2,7 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 
 import {
-  successInput, dangerInput, loadingProcess, openPost, modal,
+  successInput, dangerInput, loadingProcess, openPost, modal, addPost,
 } from './view';
 import getRss from './controller';
 import ru from './locales/index';
@@ -26,6 +26,7 @@ const runApp = async () => {
     },
     message: '',
     posts: [],
+    newP: [],
     postsName: {},
     clickPosts: [],
     modal: null,
@@ -37,8 +38,11 @@ const runApp = async () => {
     debug: true,
     resources: { ru },
   }).then(() => {
-    const watchedState = onChange(state, () => {
-      // console.log('STAAAAAAAATE', state)
+    const watchedState = onChange(state, (path) => {
+      console.log('PATH:', path);
+      if (path === 'newP') {
+        addPost(state);
+      }
       if (state.form.valid === 'loading') {
         return loadingProcess(state);
       }
