@@ -2,7 +2,7 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 
 import {
-  successInput, dangerInput, loadingProcess, openPost, modal, addPost,
+  successInput, dangerInput, loadingProcess, openPost, modal, addPost, work,
 } from './view';
 import getRss from './controller';
 import ru from './locales/index';
@@ -26,7 +26,6 @@ const runApp = async () => {
     },
     message: '',
     posts: [],
-    newP: [],
     postsName: {},
     clickPosts: [],
     modal: null,
@@ -38,9 +37,13 @@ const runApp = async () => {
     debug: true,
     resources: { ru },
   }).then(() => {
-    const watchedState = onChange(state, (path) => {
-      console.log('PATH:', path);
-      if (path === 'newP') {
+    const watchedState = onChange(state, (path, value, previousValue) => {
+      console.log('STAAAAAAAATE', state);
+      // console.log('PATH:', path);
+      // console.log('VALUE:', value);
+      // console.log('PreviousVALUE:', previousValue);
+      if (path === 'posts') {
+        // work(state)
         addPost(state);
       }
       if (state.form.valid === 'loading') {
@@ -59,7 +62,8 @@ const runApp = async () => {
       const url = data.get('url').trim();
       getRss(url, state, watchedState, i18next);
     });
-    state.elements.posts.addEventListener('click', (e) => {
+    const postsContainer = document.querySelector('.posts');
+    postsContainer.addEventListener('click', (e) => {
       const { id } = e.target;
       watchedState.clickPosts.push(id);
       watchedState.modal = id;

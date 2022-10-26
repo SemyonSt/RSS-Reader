@@ -62,16 +62,13 @@ const updatePost = (url, state, watchedState, i18n) => {
       const parsedData = parse(data.contents);
       const newPost = uniq(state.posts, parsedData.feedPosts);
       console.log(watchedState);
-
       if (newPost.length >= 1) {
-        watchedState.newP = newPost;
+        // watchedState.form = 'work';
         newPost.forEach((element) => {
           watchedState.posts.push(element);
-          // console.log("NEEEEEEEEEEEW", watchedState.newP);
         });
         // newPosts(state, newPost);
       }
-      watchedState.newP.length = 0;
     })
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 10000));
 };
@@ -88,6 +85,7 @@ const getRss = (url, state, watchedState, i18n) => {
       posts(state);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
+
       watchedState.form.data.push(url);
       watchedState.message = i18n.t('validRss');
     })
