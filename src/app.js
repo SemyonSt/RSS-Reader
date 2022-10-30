@@ -26,7 +26,7 @@ const runApp = async () => {
     },
     message: '',
     posts: [],
-    postsName: {},
+    postsName: [],
     clickPosts: [],
     modal: null,
 
@@ -43,8 +43,11 @@ const runApp = async () => {
       // console.log('VALUE:', value);
       // console.log('PreviousVALUE:', previousValue);
       if (path === 'posts') {
-        // work(state)
+        // work(state);
         addPost(state);
+      }
+      if (state.form.valid === 'work') {
+        work(state);
       }
       if (state.form.valid === 'loading') {
         return loadingProcess(state);
@@ -62,8 +65,7 @@ const runApp = async () => {
       const url = data.get('url').trim();
       getRss(url, state, watchedState, i18next);
     });
-    const postsContainer = document.querySelector('.posts');
-    postsContainer.addEventListener('click', (e) => {
+    state.elements.posts.addEventListener('click', (e) => {
       const { id } = e.target;
       watchedState.clickPosts.push(id);
       watchedState.modal = id;

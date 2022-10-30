@@ -17,10 +17,7 @@ export const successInput = (state) => {
 };
 
 export const work = (state) => {
-  state.elements.feedBack.textContent = state.message;
-  state.elements.feedBack.classList.add('text-success');
-  state.elements.input.classList.add('is-valid');
-  state.elements.input.classList.add('is-valid');
+  state.elements.form.focus();
 };
 
 export const loadingProcess = (state) => {
@@ -37,17 +34,45 @@ export const posts = (state) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
 
-  const divP = document.createElement('div');
-  divP.classList.add('card', 'border-0');
-  const divP2 = document.createElement('div');
-  divP2.classList.add('card-body');
-  const h2P = document.createElement('h2');
-  h2P.textContent = 'Посты';
-  divP2.append(h2P);
-  divP.append(divP2);
+  const div = document.createElement('div');
+  div.classList.add('card', 'border-0');
+  const ul2 = document.createElement('ul');
+  ul2.classList.add('list-group', 'border-0', 'rounded-0');
 
-  state.elements.posts.append(divP, ul);
-  // console.log(uniq(state.posts))
+  if (state.postsName.length <= 1) {
+    const divP = document.createElement('div');
+    divP.classList.add('card', 'border-0');
+    const divP2 = document.createElement('div');
+    divP2.classList.add('card-body');
+    const h2P = document.createElement('h2');
+    h2P.textContent = 'Посты';
+    h2P.classList.add('card-title', 'h4');
+    state.elements.posts.append(divP);
+    divP.append(divP2, ul);
+    divP2.append(h2P);
+
+    // Показываю "Фиды"
+
+    // const div2 = document.createElement('div');
+    // div2.classList.add('card-body');
+    // const h2 = document.createElement('h2');
+    // h2.classList.add('card-title', 'h4');
+    // h2.textContent = 'Фиды';
+    // div2.append(h2);
+    // div.append(div2);
+
+    const div2 = document.createElement('div');
+    div2.classList.add('card', 'border-0');
+    const divPN2 = document.createElement('div');
+    divPN2.classList.add('card-body');
+    const h2 = document.createElement('h2');
+    h2.textContent = 'Фиды';
+    h2.classList.add('card-title', 'h4');
+    state.elements.feeds.append(div2);
+    div2.append(divPN2, ul2);
+    divPN2.append(h2);
+  }
+
   state.posts.forEach((element) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
@@ -64,39 +89,29 @@ export const posts = (state) => {
     button.setAttribute('data-bs-dismiss', 'modal');
     button.setAttribute('data-bs-toggle', 'modal');
     button.setAttribute('data-bs-target', '#modal');
-    a.id = uniqueId();
-    button.id = a.id;
-    element.id = a.id;
+    a.id = element.id;
+    button.id = element.id;
+    // element.id = a.id;
     li.append(a, button);
     ul.append(li);
   });
-  // Показываю "Фиды"
-  const div = document.createElement('div');
-  div.classList.add('card', 'border-0');
-  const div2 = document.createElement('div');
-  div2.classList.add('card-body');
-  const h2 = document.createElement('h2');
-  h2.textContent = 'Фиды';
-  div2.append(h2);
-  div.append(div2);
 
   // Показываю назване фидов
-  const ul2 = document.createElement('ul');
-  ul2.classList.add('list-group', 'border-0', 'rounded-0');
+  state.postsName.forEach((i) => {
+    ul2.innerHTML = '';
+    const li = document.createElement('li');
+    li.classList.add('list-group-item', 'border-0', 'rounded-0');
 
-  const li = document.createElement('li');
-  li.classList.add('list-group-item', 'border-0', 'rounded-0');
+    const h3 = document.createElement('h3');
+    h3.classList.add('h6', 'm-0');
+    h3.textContent = i.title;
 
-  const h3 = document.createElement('h3');
-  h3.classList.add('h6', 'm-0');
-  h3.textContent = state.postsName.title;
-
-  const p = document.createElement('p');
-  p.classList.add('m-0', 'small', 'text-black-50');
-  p.textContent = state.postsName.description;
-
-  ul2.append(li);
-  li.append(h3, p);
+    const p = document.createElement('p');
+    p.classList.add('m-0', 'small', 'text-black-50');
+    p.textContent = i.description;
+    li.append(h3, p);
+    ul2.append(li);
+  });
   state.elements.feeds.append(div, ul2);
 };
 
@@ -121,12 +136,12 @@ export const addPost = (state) => {
     button.setAttribute('data-bs-dismiss', 'modal');
     button.setAttribute('data-bs-toggle', 'modal');
     button.setAttribute('data-bs-target', '#modal');
-    a.id = uniqueId();
-    button.id = a.id;
-    element.id = a.id;
+    a.id = element.id;
+    button.id = element.id;
     li.append(a, button);
     ul.prepend(li);
   });
+  openPost(state);
 };
 
 // export const newPosts = (state, newposts) => {

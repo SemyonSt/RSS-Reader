@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import axios from 'axios';
 import * as _ from 'lodash';
+import { uniqueId } from 'lodash';
 import { posts, newPosts } from './view';
 
 const validate = async (i18n, watchedState, url) => {
@@ -63,14 +64,15 @@ const updatePost = (url, state, watchedState, i18n) => {
       const newPost = uniq(state.posts, parsedData.feedPosts);
       console.log(watchedState);
       if (newPost.length >= 1) {
-        // watchedState.form = 'work';
+        watchedState.form.valid = 'work';
         newPost.forEach((element) => {
           watchedState.posts.push(element);
+          element.id = uniqueId();
         });
         // newPosts(state, newPost);
       }
     })
-    .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 10000));
+    .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
 };
 
 const getRss = (url, state, watchedState, i18n) => {
@@ -80,8 +82,13 @@ const getRss = (url, state, watchedState, i18n) => {
       return getData(url);
     })
     .then((data) => {
-      parse(data.contents).feedPosts.forEach((i) => state.posts.push(i));
-      Object.assign(state.postsName, parse(data.contents).feedName);
+      parse(data.contents).feedPosts.forEach((i) => {
+        state.posts.push(i);
+        i.id = uniqueId();
+      });
+
+      // Object.assign(state.postsName, parse(data.contents).feedName);
+      watchedState.postsName.push(parse(data.contents).feedName);
       posts(state);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
