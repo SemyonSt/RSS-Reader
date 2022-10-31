@@ -17,6 +17,7 @@ export const successInput = (state) => {
 };
 
 export const work = (state) => {
+  state.elements.feedBack.classList.add('text-success');
   state.elements.form.focus();
 };
 
@@ -53,23 +54,13 @@ export const posts = (state) => {
 
     // Показываю "Фиды"
 
-    // const div2 = document.createElement('div');
-    // div2.classList.add('card-body');
-    // const h2 = document.createElement('h2');
-    // h2.classList.add('card-title', 'h4');
-    // h2.textContent = 'Фиды';
-    // div2.append(h2);
-    // div.append(div2);
-
-    const div2 = document.createElement('div');
-    div2.classList.add('card', 'border-0');
     const divPN2 = document.createElement('div');
     divPN2.classList.add('card-body');
     const h2 = document.createElement('h2');
     h2.textContent = 'Фиды';
     h2.classList.add('card-title', 'h4');
-    state.elements.feeds.append(div2);
-    div2.append(divPN2, ul2);
+    state.elements.feeds.append(div);
+    div.append(divPN2, ul2);
     divPN2.append(h2);
   }
 
@@ -120,6 +111,7 @@ export const addPost = (state) => {
 
   ul.innerHTML = '';
   // state.elements.posts.append(ul);
+
   state.posts.forEach((element) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
@@ -143,6 +135,27 @@ export const addPost = (state) => {
   });
   openPost(state);
 };
+
+// export const addFeeds = (state) => {
+//   const div = document.querySelector('.feeds');
+//   const ul = div.querySelector('ul');
+//   console.log(ul);
+//   ul.innerHTML = '';
+//   state.postsName.forEach((i) => {
+//     const li = document.createElement('li');
+//     li.classList.add('list-group-item', 'border-0', 'rounded-0');
+
+//     const h3 = document.createElement('h3');
+//     h3.classList.add('h6', 'm-0');
+//     h3.textContent = i.title;
+
+//     const p = document.createElement('p');
+//     p.classList.add('m-0', 'small', 'text-black-50');
+//     p.textContent = i.description;
+//     li.append(h3, p);
+//     ul.prepend(li);
+//   });
+// };
 
 // export const newPosts = (state, newposts) => {
 //   const ul = document.querySelector('ul');

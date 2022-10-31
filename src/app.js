@@ -38,26 +38,29 @@ const runApp = async () => {
     resources: { ru },
   }).then(() => {
     const watchedState = onChange(state, (path, value, previousValue) => {
-      console.log('STAAAAAAAATE', state);
+      // console.log('STAAAAAAAATE', state);
       // console.log('PATH:', path);
       // console.log('VALUE:', value);
       // console.log('PreviousVALUE:', previousValue);
+
       if (path === 'posts') {
         // work(state);
         addPost(state);
       }
-      if (state.form.valid === 'work') {
+      if (value === 'work') {
         work(state);
       }
-      if (state.form.valid === 'loading') {
+      if (value === 'loading') {
         return loadingProcess(state);
       }
-      if (state.form.valid === true) {
+      if (value === true) {
         loadingProcess(state);
         return successInput(state);
       }
-      loadingProcess(state);
-      return dangerInput(state);
+      if (value === false) {
+        loadingProcess(state);
+        return dangerInput(state);
+      }
     });
     state.elements.form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -66,11 +69,15 @@ const runApp = async () => {
       getRss(url, state, watchedState, i18next);
     });
     state.elements.posts.addEventListener('click', (e) => {
+      console.log('OPAPAPAOPAAAPA', e.target);
       const { id } = e.target;
-      watchedState.clickPosts.push(id);
-      watchedState.modal = id;
-      openPost(watchedState);
-      modal(watchedState);
+      console.log('IDIDIDI', id);
+      if (id !== '') {
+        watchedState.clickPosts.push(id);
+        watchedState.modal = id;
+        openPost(watchedState);
+        modal(watchedState);
+      }
     });
   });
 };

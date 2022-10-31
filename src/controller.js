@@ -62,12 +62,12 @@ const updatePost = (url, state, watchedState, i18n) => {
     .then((data) => {
       const parsedData = parse(data.contents);
       const newPost = uniq(state.posts, parsedData.feedPosts);
-      console.log(watchedState);
+      // console.log(watchedState);
       if (newPost.length >= 1) {
         watchedState.form.valid = 'work';
         newPost.forEach((element) => {
-          watchedState.posts.push(element);
           element.id = uniqueId();
+          watchedState.posts.push(element);
         });
         // newPosts(state, newPost);
       }
