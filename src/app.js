@@ -38,17 +38,7 @@ const runApp = async () => {
     resources: { ru },
   }).then(() => {
     const watchedState = onChange(state, (path, value, previousValue) => {
-      console.log('STAAAAAAAATE', state);
-      // console.log('PATH:', path);
-      // console.log('VALUE:', value);
-      // console.log('PreviousVALUE:', previousValue);
-      // if(path === 'postsName') {
-      //   const divs = document.querySelector('.feeds');
-      //   const ul2 = divs.querySelector('ul');
-      //   ul2.innerHTML = ''
-      // }
       if (path === 'posts') {
-        // work(state);
         addPost(state);
       }
       if (state.form.valid === 'work') {
@@ -73,9 +63,7 @@ const runApp = async () => {
       getRss(url, state, watchedState, i18next);
     });
     state.elements.posts.addEventListener('click', (e) => {
-      // console.log('OPAPAPAOPAAAPA', e.target);
       const { id } = e.target;
-      // console.log('IDIDIDI', id);
       if (id !== '') {
         watchedState.clickPosts.push(id);
         watchedState.modal = id;

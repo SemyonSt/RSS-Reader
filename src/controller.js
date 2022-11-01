@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import axios from 'axios';
 import * as _ from 'lodash';
 import { uniqueId } from 'lodash';
-import { posts, newPosts } from './view';
+import { posts, feeds } from './view';
 
 const validate = async (i18n, watchedState, url) => {
   yup.setLocale({
@@ -21,7 +21,6 @@ const validate = async (i18n, watchedState, url) => {
 const parse = (data) => {
   const parser = new DOMParser();
   const dom = parser.parseFromString(data, 'application/xml');
-  // console.log(data)
   const parseError = dom.querySelector('parsererror');
   if (parseError) {
     const error = new Error('Ресурс не содержит валидный RSS');
@@ -40,7 +39,6 @@ const parse = (data) => {
     const descriptions = item.querySelector('description').innerHTML;
     return { titles, links, descriptions };
   });
-  // console.log('feposts!!!', dom)
   return { feedName, feedPosts };
 };
 
@@ -50,26 +48,18 @@ const getData = (url) => axios
   .catch(() => { throw new Error('Network response was not ok.'); });
 
 const uniq = (arr1, arr2) => _.differenceBy(arr2, arr1, 'titles');
-// const uniqNewPost = (arr) => {
-//   const seen = {};
-//   return arr.filter((x) => {
-//     const key = JSON.stringify(x);
-//     return !(key in seen) && (seen[key] = x);
-//   });
-// };
+
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
       const parsedData = parse(data.contents);
       const newPost = uniq(state.posts, parsedData.feedPosts);
-      console.log(watchedState);
       if (newPost.length >= 1) {
         watchedState.form.valid = 'work';
         newPost.forEach((element) => {
           element.id = uniqueId();
           watchedState.posts.push(element);
         });
-        // newPosts(state, newPost);
       }
     })
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
@@ -87,9 +77,9 @@ const getRss = (url, state, watchedState, i18n) => {
         i.id = uniqueId();
       });
 
-      // Object.assign(state.postsName, parse(data.contents).feedName);
       watchedState.postsName.push(parse(data.contents).feedName);
       posts(state);
+      feeds(state);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
 
