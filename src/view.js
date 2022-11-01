@@ -40,11 +40,12 @@ export const posts = (state) => {
   const ul2 = document.createElement('ul');
   ul2.classList.add('list-group', 'border-0', 'rounded-0');
 
+  const divP2 = document.createElement('div');
+  divP2.classList.add('card-body');
   if (state.postsName.length <= 1) {
     const divP = document.createElement('div');
     divP.classList.add('card', 'border-0');
-    const divP2 = document.createElement('div');
-    divP2.classList.add('card-body');
+
     const h2P = document.createElement('h2');
     h2P.textContent = 'Посты';
     h2P.classList.add('card-title', 'h4');

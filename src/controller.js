@@ -83,13 +83,15 @@ const getRss = (url, state, watchedState, i18n) => {
     })
     .then((data) => {
       parse(data.contents).feedPosts.forEach((i) => {
-        state.posts.push(i);
+        watchedState.posts.push(i);
         i.id = uniqueId();
+       
       });
 
       // Object.assign(state.postsName, parse(data.contents).feedName);
       watchedState.postsName.push(parse(data.contents).feedName);
-      posts(state);
+      console.log(watchedState)
+      posts(watchedState);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
 
