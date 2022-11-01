@@ -62,7 +62,7 @@ const updatePost = (url, state, watchedState, i18n) => {
     .then((data) => {
       const parsedData = parse(data.contents);
       const newPost = uniq(state.posts, parsedData.feedPosts);
-      // console.log(watchedState);
+      console.log(watchedState);
       if (newPost.length >= 1) {
         watchedState.form.valid = 'work';
         newPost.forEach((element) => {
@@ -83,15 +83,13 @@ const getRss = (url, state, watchedState, i18n) => {
     })
     .then((data) => {
       parse(data.contents).feedPosts.forEach((i) => {
-        watchedState.posts.push(i);
+        state.posts.push(i);
         i.id = uniqueId();
-       
       });
 
       // Object.assign(state.postsName, parse(data.contents).feedName);
       watchedState.postsName.push(parse(data.contents).feedName);
-      console.log(watchedState)
-      posts(watchedState);
+      posts(state);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
 

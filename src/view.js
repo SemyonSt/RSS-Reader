@@ -17,7 +17,7 @@ export const successInput = (state) => {
 };
 
 export const work = (state) => {
-  state.elements.feedBack.classList.add('text-success');
+  state.elements.feedBack.textContent = state.message;
   state.elements.form.focus();
 };
 
@@ -34,27 +34,25 @@ export const loadingProcess = (state) => {
 export const posts = (state) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
+  const divP = document.createElement('div');
+  divP.classList.add('card', 'border-0');
 
   const div = document.createElement('div');
   div.classList.add('card', 'border-0');
-  const ul2 = document.createElement('ul');
-  ul2.classList.add('list-group', 'border-0', 'rounded-0');
 
-  const divP2 = document.createElement('div');
-  divP2.classList.add('card-body');
   if (state.postsName.length <= 1) {
-    const divP = document.createElement('div');
-    divP.classList.add('card', 'border-0');
-
+    const divP2 = document.createElement('div');
+    divP2.classList.add('card-body');
     const h2P = document.createElement('h2');
     h2P.textContent = 'Посты';
     h2P.classList.add('card-title', 'h4');
     state.elements.posts.append(divP);
-    divP.append(divP2, ul);
+    divP.append(divP2);
     divP2.append(h2P);
 
     // Показываю "Фиды"
-
+    const ul2 = document.createElement('ul');
+    ul2.classList.add('list-group', 'border-0', 'rounded-0');
     const divPN2 = document.createElement('div');
     divPN2.classList.add('card-body');
     const h2 = document.createElement('h2');
@@ -85,12 +83,16 @@ export const posts = (state) => {
     button.id = element.id;
     // element.id = a.id;
     li.append(a, button);
-    ul.append(li);
+    ul.prepend(li);
   });
+  divP.append(ul);
 
   // Показываю назване фидов
+  // ul2.innerHTML = '';
+  const divs = document.querySelector('.feeds'); // получаю селектор фидов
+  const ul2 = divs.querySelector('ul');
+  ul2.innerHTML = '';
   state.postsName.forEach((i) => {
-    ul2.innerHTML = '';
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'border-0', 'rounded-0');
 
@@ -102,9 +104,8 @@ export const posts = (state) => {
     p.classList.add('m-0', 'small', 'text-black-50');
     p.textContent = i.description;
     li.append(h3, p);
-    ul2.append(li);
+    ul2.prepend(li);
   });
-  state.elements.feeds.append(div, ul2);
 };
 
 export const addPost = (state) => {
@@ -112,7 +113,6 @@ export const addPost = (state) => {
 
   ul.innerHTML = '';
   // state.elements.posts.append(ul);
-
   state.posts.forEach((element) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
@@ -136,27 +136,6 @@ export const addPost = (state) => {
   });
   openPost(state);
 };
-
-// export const addFeeds = (state) => {
-//   const div = document.querySelector('.feeds');
-//   const ul = div.querySelector('ul');
-//   console.log(ul);
-//   ul.innerHTML = '';
-//   state.postsName.forEach((i) => {
-//     const li = document.createElement('li');
-//     li.classList.add('list-group-item', 'border-0', 'rounded-0');
-
-//     const h3 = document.createElement('h3');
-//     h3.classList.add('h6', 'm-0');
-//     h3.textContent = i.title;
-
-//     const p = document.createElement('p');
-//     p.classList.add('m-0', 'small', 'text-black-50');
-//     p.textContent = i.description;
-//     li.append(h3, p);
-//     ul.prepend(li);
-//   });
-// };
 
 // export const newPosts = (state, newposts) => {
 //   const ul = document.querySelector('ul');
