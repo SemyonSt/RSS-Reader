@@ -1,5 +1,3 @@
-import { uniqueId } from 'lodash';
-
 export const dangerInput = (state) => {
   state.elements.feedBack.textContent = state.message;
   state.elements.feedBack.classList.replace('text-success', 'text-danger');
@@ -31,7 +29,26 @@ export const loadingProcess = (state) => {
   }
 };
 
-export const addPost = (state) => {
+export const modal = (state) => {
+  const modalTitle = document.querySelector('.modal-title');
+  const modalDescription = document.querySelector('.modal-body');
+  const modalHref = document.querySelector('.full-article');
+  state.posts.forEach((element) => {
+    if (element.id === state.modal) {
+      modalTitle.textContent = element.titles;
+      modalDescription.textContent = element.descriptions;
+      modalHref.href = element.links;
+    }
+  });
+};
+
+export const openPost = (state) => {
+  state.clickPosts.forEach((i) => {
+    const element = document.querySelector(`[id="${i}"]`);
+    element.classList.replace('fw-bold', 'fw-normal');
+  });
+};
+export const addPost = (state, i18n) => {
   const ul = document.querySelector('ul');
 
   ul.innerHTML = '';
@@ -46,7 +63,7 @@ export const addPost = (state) => {
     a.setAttribute('href', element.links);
 
     const button = document.createElement('button');
-    button.textContent = 'Просмотр';
+    button.textContent = i18n.t('view');
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
 
     button.setAttribute('data-bs-dismiss', 'modal');
@@ -60,7 +77,7 @@ export const addPost = (state) => {
   openPost(state);
 };
 
-export const feeds = (state) => {
+export const feeds = (state, i18n) => {
   const divBorder = document.createElement('div');
   divBorder.classList.add('card', 'border-0');
   if (state.postsName.length <= 1) {
@@ -70,7 +87,7 @@ export const feeds = (state) => {
     const divBody = document.createElement('div');
     divBody.classList.add('card-body');
     const h2 = document.createElement('h2');
-    h2.textContent = 'Фиды';
+    h2.textContent = i18n.t('feeds');
     h2.classList.add('card-title', 'h4');
     state.elements.feeds.append(divBorder);
     divBorder.append(divBody, ul);
@@ -95,7 +112,7 @@ export const feeds = (state) => {
   });
 };
 
-export const posts = (state) => {
+export const posts = (state, i18n) => {
   const divBorder = document.createElement('div');
   divBorder.classList.add('card', 'border-0');
   const ul = document.createElement('ul');
@@ -105,7 +122,7 @@ export const posts = (state) => {
     const divBody = document.createElement('div');
     divBody.classList.add('card-body');
     const h2P = document.createElement('h2');
-    h2P.textContent = 'Посты';
+    h2P.textContent = i18n.t('posts');
     h2P.classList.add('card-title', 'h4');
     state.elements.posts.append(divBorder);
     divBorder.append(divBody, ul);
@@ -136,24 +153,4 @@ export const posts = (state) => {
     ulPost.prepend(li);
   });
   divBorder.append(ul);
-};
-
-export const modal = (state) => {
-  const modalTitle = document.querySelector('.modal-title');
-  const modalDescription = document.querySelector('.modal-body');
-  const modalHref = document.querySelector('.full-article');
-  state.posts.forEach((element) => {
-    if (element.id === state.modal) {
-      modalTitle.textContent = element.titles;
-      modalDescription.textContent = element.descriptions;
-      modalHref.href = element.links;
-    }
-  });
-};
-
-export const openPost = (state) => {
-  state.clickPosts.forEach((i) => {
-    const element = document.querySelector(`[id="${i}"]`);
-    element.classList.replace('fw-bold', 'fw-normal');
-  });
 };

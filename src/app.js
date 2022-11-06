@@ -37,9 +37,9 @@ const runApp = async () => {
     debug: true,
     resources: { ru },
   }).then(() => {
-    const watchedState = onChange(state, (path, value, previousValue) => {
+    const watchedState = onChange(state, (path) => {
       if (path === 'posts') {
-        addPost(state);
+        addPost(state, i18next);
       }
       if (state.form.valid === 'work') {
         work(state);
@@ -55,6 +55,7 @@ const runApp = async () => {
         loadingProcess(state);
         return dangerInput(state);
       }
+      return '';
     });
     state.elements.form.addEventListener('submit', async (e) => {
       e.preventDefault();

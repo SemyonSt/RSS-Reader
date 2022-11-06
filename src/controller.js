@@ -78,8 +78,8 @@ const getRss = (url, state, watchedState, i18n) => {
       });
 
       watchedState.postsName.push(parse(data.contents).feedName);
-      posts(state);
-      feeds(state);
+      posts(state, i18n);
+      feeds(state, i18n);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
 
