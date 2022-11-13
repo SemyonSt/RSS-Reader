@@ -20,7 +20,7 @@ export const work = (state) => {
 };
 
 export const loadingProcess = (state) => {
-  if (state.form.valid === 'loading') {
+  if (state.form.statusForm === 'loading') {
     state.elements.input.disabled = true;
     state.elements.btn.disabled = true;
   } else {
@@ -29,7 +29,7 @@ export const loadingProcess = (state) => {
   }
 };
 
-export const modal = (state) => {
+export const openModal = (state) => {
   const modalTitle = document.querySelector('.modal-title');
   const modalDescription = document.querySelector('.modal-body');
   const modalHref = document.querySelector('.full-article');
@@ -77,7 +77,7 @@ export const addPost = (state, i18n) => {
   openPost(state);
 };
 
-export const feeds = (state, i18n) => {
+export const addFeeds = (state, i18n) => {
   const divBorder = document.createElement('div');
   divBorder.classList.add('card', 'border-0');
   if (state.postsName.length <= 1) {
@@ -112,7 +112,7 @@ export const feeds = (state, i18n) => {
   });
 };
 
-export const posts = (state, i18n) => {
+export const addNewPosts = (state, i18n) => {
   const divBorder = document.createElement('div');
   divBorder.classList.add('card', 'border-0');
   const ul = document.createElement('ul');

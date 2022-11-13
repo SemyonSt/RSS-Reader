@@ -2,15 +2,15 @@ import * as yup from 'yup';
 import axios from 'axios';
 import * as _ from 'lodash';
 import { uniqueId } from 'lodash';
-import { posts, feeds } from './view';
+import { addNewPosts, addFeeds } from './view';
 
 const validate = async (i18n, watchedState, url) => {
   yup.setLocale({
     mixed: {
-      notOneOf: i18n.t('notValidDouble'),
+      notOneOf: 'notValidDouble',
     },
     string: {
-      url: i18n.t('notValidUrl'),
+      url: 'notValidUrl',
     },
   });
 
@@ -23,7 +23,7 @@ const parse = (data) => {
   const dom = parser.parseFromString(data, 'application/xml');
   const parseError = dom.querySelector('parsererror');
   if (parseError) {
-    const error = new Error('Ресурс не содержит валидный RSS');
+    const error = new Error('notValidRss');
     error.isParsingError = true;
     throw error;
   }
@@ -49,26 +49,26 @@ const getData = (url) => axios
 
 const uniq = (arr1, arr2) => _.differenceBy(arr2, arr1, 'titles');
 
-const updatePost = (url, state, watchedState, i18n) => {
+const updatePost = (url, watchedState, i18n) => {
   getData(url)
     .then((data) => {
       const parsedData = parse(data.contents);
-      const newPost = uniq(state.posts, parsedData.feedPosts);
+      const newPost = uniq(watchedState.posts, parsedData.feedPosts);
       if (newPost.length >= 1) {
-        watchedState.form.valid = 'work';
+        watchedState.form.statusForm = 'work';
         newPost.forEach((element) => {
           element.id = uniqueId();
           watchedState.posts.push(element);
         });
       }
     })
-    .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
+    .then(setTimeout(() => { updatePost(url, watchedState, i18n); }, 5000));
 };
 
 const getRss = (url, state, watchedState, i18n) => {
   validate(i18n, watchedState, url, state)
     .then(() => {
-      watchedState.form.valid = 'loading';
+      watchedState.form.statusForm = 'loading';
       return getData(url);
     })
     .then((data) => {
@@ -78,17 +78,30 @@ const getRss = (url, state, watchedState, i18n) => {
       });
 
       watchedState.postsName.push(parse(data.contents).feedName);
-      posts(state, i18n);
-      feeds(state, i18n);
-      updatePost(url, state, watchedState, i18n);
-      watchedState.form.valid = true;
+      addNewPosts(state, i18n);
+      addFeeds(state, i18n);
+      updatePost(url, watchedState, i18n);
+      watchedState.form.statusForm = true;
 
       watchedState.form.data.push(url);
-      watchedState.message = i18n.t('validRss');
+      // watchedState.message = i18n.t('validRss');
     })
     .catch((err) => {
-      watchedState.form.valid = false;
-      watchedState.message = err.message;
+      watchedState.form.statusForm = false;
+      switch (err.message) {
+        case ('notValidDouble'):
+          watchedState.message = i18n.t('notValidDouble');
+          break;
+        case ('notValidUrl'):
+          watchedState.message = i18n.t('notValidUrl');
+          break;
+        case ('notValidRss'):
+          watchedState.message = i18n.t('notValidRss');
+          break;
+        default:
+          break;
+      }
+      // watchedState.message = err.message;
     });
 };
 export default getRss;

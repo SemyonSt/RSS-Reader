@@ -2,7 +2,7 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 
 import {
-  successInput, dangerInput, loadingProcess, openPost, modal, addPost, work,
+  successInput, dangerInput, loadingProcess, openPost, openModal, addPost, work,
 } from './view';
 import getRss from './controller';
 import ru from './locales/index';
@@ -10,7 +10,7 @@ import ru from './locales/index';
 const runApp = async () => {
   const state = {
     form: {
-      valid: '',
+      statusForm: '',
       processState: 'filling',
       processError: null,
       data: [],
@@ -38,20 +38,25 @@ const runApp = async () => {
     resources: { ru },
   }).then(() => {
     const watchedState = onChange(state, (path) => {
+      if (path === 'modal') {
+        openPost(state);
+        openModal(state);
+      }
       if (path === 'posts') {
         addPost(state, i18next);
       }
-      if (state.form.valid === 'work') {
+      if (state.form.statusForm === 'work') {
         work(state);
       }
-      if (state.form.valid === 'loading') {
+      if (state.form.statusForm === 'loading') {
         return loadingProcess(state);
       }
-      if (state.form.valid === true) {
+      if (state.form.statusForm === true) {
+        watchedState.message = i18next.t('validRss');
         loadingProcess(state);
         return successInput(state);
       }
-      if (state.form.valid === false) {
+      if (state.form.statusForm === false) {
         loadingProcess(state);
         return dangerInput(state);
       }
@@ -68,8 +73,6 @@ const runApp = async () => {
       if (id !== '') {
         watchedState.clickPosts.push(id);
         watchedState.modal = id;
-        openPost(watchedState);
-        modal(watchedState);
       }
     });
   });
