@@ -47,28 +47,29 @@ const getData = (url) => axios
   .then((response) => response.data)
   .catch(() => { throw new Error('Network response was not ok.'); });
 
-const uniq = (arr1, arr2) => _.differenceBy(arr2, arr1, 'titles');
+const uniq = (arr1, arr2) => _.differenceBy(arr1, arr2, 'titles');
 
-const updatePost = (url, watchedState, i18n) => {
+const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
       const parsedData = parse(data.contents);
-      const newPost = uniq(watchedState.posts, parsedData.feedPosts);
+      const newPost = uniq(parsedData.feedPosts, watchedState.posts);
       if (newPost.length >= 1) {
-        watchedState.form.statusForm = 'work';
+        watchedState.form.valid = '';
         newPost.forEach((element) => {
           element.id = uniqueId();
-          watchedState.posts.push(element);
+          // watchedState.posts.push(element);
         });
+        watchedState.posts = [newPost, ...watchedState.posts].flat();
       }
     })
-    .then(setTimeout(() => { updatePost(url, watchedState, i18n); }, 5000));
+    .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
 };
 
 const getRss = (url, state, watchedState, i18n) => {
   validate(i18n, watchedState, url, state)
     .then(() => {
-      watchedState.form.statusForm = 'loading';
+      watchedState.form.processState = 'loading';
       return getData(url);
     })
     .then((data) => {
@@ -80,14 +81,15 @@ const getRss = (url, state, watchedState, i18n) => {
       watchedState.postsName.push(parse(data.contents).feedName);
       addNewPosts(state, i18n);
       addFeeds(state, i18n);
-      updatePost(url, watchedState, i18n);
-      watchedState.form.statusForm = true;
-
+      updatePost(url, state, watchedState, i18n);
+      watchedState.form.valid = true;
+      watchedState.form.processState = 'work';
       watchedState.form.data.push(url);
+
       // watchedState.message = i18n.t('validRss');
     })
     .catch((err) => {
-      watchedState.form.statusForm = false;
+      watchedState.form.valid = false;
       switch (err.message) {
         case ('notValidDouble'):
           watchedState.message = i18n.t('notValidDouble');

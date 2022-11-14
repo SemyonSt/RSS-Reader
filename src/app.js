@@ -2,7 +2,7 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 
 import {
-  successInput, dangerInput, loadingProcess, openPost, openModal, addPost, work,
+  successInput, dangerInput, loadingProcess, openPost, openModal, addPost,
 } from './view';
 import getRss from './controller';
 import ru from './locales/index';
@@ -10,8 +10,8 @@ import ru from './locales/index';
 const runApp = async () => {
   const state = {
     form: {
-      statusForm: '',
-      processState: 'filling',
+      valid: '',
+      processState: '',
       processError: null,
       data: [],
     },
@@ -29,7 +29,6 @@ const runApp = async () => {
     postsName: [],
     clickPosts: [],
     modal: null,
-
   };
 
   i18next.init({
@@ -38,6 +37,8 @@ const runApp = async () => {
     resources: { ru },
   }).then(() => {
     const watchedState = onChange(state, (path) => {
+      loadingProcess(state);
+
       if (path === 'modal') {
         openPost(state);
         openModal(state);
@@ -45,20 +46,12 @@ const runApp = async () => {
       if (path === 'posts') {
         addPost(state, i18next);
       }
-      if (state.form.statusForm === 'work') {
-        work(state);
-      }
-      if (state.form.statusForm === 'loading') {
-        return loadingProcess(state);
-      }
-      if (state.form.statusForm === true) {
+      if (state.form.valid === true) {
         watchedState.message = i18next.t('validRss');
-        loadingProcess(state);
-        return successInput(state);
+        successInput(state);
       }
-      if (state.form.statusForm === false) {
-        loadingProcess(state);
-        return dangerInput(state);
+      if (state.form.valid === false) {
+        dangerInput(state);
       }
       return '';
     });

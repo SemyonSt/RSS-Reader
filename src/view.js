@@ -20,7 +20,7 @@ export const work = (state) => {
 };
 
 export const loadingProcess = (state) => {
-  if (state.form.statusForm === 'loading') {
+  if (state.form.processState === 'loading') {
     state.elements.input.disabled = true;
     state.elements.btn.disabled = true;
   } else {
@@ -72,7 +72,7 @@ export const addPost = (state, i18n) => {
     a.id = element.id;
     button.id = element.id;
     li.append(a, button);
-    ul.prepend(li);
+    ul.append(li);
   });
   openPost(state);
 };
@@ -150,7 +150,7 @@ export const addNewPosts = (state, i18n) => {
     a.id = element.id;
     button.id = element.id;
     li.append(a, button);
-    ulPost.prepend(li);
+    ulPost.append(li);
   });
   divBorder.append(ul);
 };
