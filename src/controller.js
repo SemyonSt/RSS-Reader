@@ -89,6 +89,7 @@ const getRss = (url, state, watchedState, i18n) => {
       // watchedState.message = i18n.t('validRss');
     })
     .catch((err) => {
+      console.log(err.message)
       watchedState.form.valid = false;
       switch (err.message) {
         case ('notValidDouble'):
@@ -99,6 +100,9 @@ const getRss = (url, state, watchedState, i18n) => {
           break;
         case ('notValidRss'):
           watchedState.message = i18n.t('notValidRss');
+          break;
+        case ('Network response was not ok.'):
+          watchedState.message = i18n.t('networkError');
           break;
         default:
           break;
