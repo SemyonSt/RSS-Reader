@@ -89,7 +89,6 @@ const getRss = (url, state, watchedState, i18n) => {
       // watchedState.message = i18n.t('validRss');
     })
     .catch((err) => {
-      console.log(err.message)
       watchedState.form.valid = false;
       switch (err.message) {
         case ('notValidDouble'):
