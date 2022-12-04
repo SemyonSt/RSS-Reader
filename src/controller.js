@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { uniqueId } from 'lodash';
 import { renderNewPosts, renderFeeds } from './view';
 
-const validate = async (i18n, watchedState, url) => {
+const validate = async (link, url) => {
   yup.setLocale({
     mixed: {
       notOneOf: 'notValidDouble',
@@ -14,8 +14,8 @@ const validate = async (i18n, watchedState, url) => {
     },
   });
 
-  const schema = yup.string().url().required();
-  return schema.notOneOf(watchedState.form.data).validate(url);
+  const schema = yup.string().url().required().notOneOf(link);
+  return schema.validate(url);
 };
 
 const parse = (data) => {
@@ -53,43 +53,46 @@ const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
       const parsedData = parse(data.contents);
-      const newPost = uniq(parsedData.feedPosts, watchedState.posts);
+      const newPost = uniq(parsedData.feedPosts, watchedState.postsName);
       if (newPost.length >= 1) {
         watchedState.form.valid = '';
         newPost.forEach((element) => {
           element.id = uniqueId();
-          // watchedState.posts.push(element);
+          // watchedState.postsName.push(element);
         });
-        watchedState.posts = [newPost, ...watchedState.posts].flat();
+        watchedState.postsName = [newPost, ...watchedState.postsName].flat();
       }
     })
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
 };
 
-const getRss = (url, state, watchedState, i18n) => {
-  validate(i18n, watchedState, url, state)
+const getRss = (url, state, watchedState, i18n, elements) => {
+  const link = watchedState.form.links;
+  validate(link, url)
     .then(() => {
-      watchedState.form.processState = 'loading';
+      watchedState.form.loadingProcessState = 'loading';
       return getData(url);
     })
     .then((data) => {
       parse(data.contents).feedPosts.forEach((i) => {
-        state.posts.push(i);
+        state.postsName.push(i);
         i.id = uniqueId();
       });
 
-      watchedState.postsName.push(parse(data.contents).feedName);
-      renderNewPosts(state, i18n);
-      renderFeeds(state, i18n);
+      watchedState.feedsName.push(parse(data.contents).feedName);
+      renderNewPosts(state, i18n, elements);
+      renderFeeds(state, i18n, elements);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
-      watchedState.form.processState = 'work';
-      watchedState.form.data.push(url);
+      watchedState.form.loadingProcessState = 'initial';
+      watchedState.form.links.push(url);
 
       // watchedState.message = i18n.t('validRss');
     })
     .catch((err) => {
+      watchedState.form.loadingProcessState = 'initial';
       watchedState.form.valid = false;
+      console.log(err.error);
       switch (err.message) {
         case ('notValidDouble'):
           watchedState.message = i18n.t('notValidDouble');

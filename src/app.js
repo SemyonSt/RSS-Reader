@@ -10,25 +10,25 @@ import ru from './locales/index';
 const runApp = async () => {
   const state = {
     form: {
-      valid: '',
-      processState: '',
+      valid: false,
+      loadingProcessState: 'initial',
       processError: null,
-      data: [],
-    },
-    elements: {
-      form: document.querySelector('.rss-form'),
-      input: document.querySelector('#url-input'),
-      btn: document.querySelector('.h-100 '),
-      feedBack: document.querySelector('.feedback'),
-      posts: document.querySelector('.posts'),
-      feeds: document.querySelector('.feeds'),
-      btnPost: document.querySelector('.btn'),
+      links: [],
     },
     message: '',
-    posts: [],
     postsName: [],
+    feedsName: [],
     clickPosts: [],
     modal: null,
+  };
+  const elements = {
+    form: document.querySelector('.rss-form'),
+    input: document.querySelector('#url-input'),
+    btn: document.querySelector('.h-100 '),
+    feedBack: document.querySelector('.feedback'),
+    posts: document.querySelector('.posts'),
+    feeds: document.querySelector('.feeds'),
+    btnPost: document.querySelector('.btn'),
   };
 
   i18next.init({
@@ -37,7 +37,7 @@ const runApp = async () => {
     resources: { ru },
   }).then(() => {
     const watchedState = onChange(state, (path) => {
-      loadingProcess(state);
+      loadingProcess(state, elements);
 
       if (path === 'modal') {
         lookAtPost(state);
@@ -48,20 +48,20 @@ const runApp = async () => {
       }
       if (state.form.valid === true) {
         watchedState.message = i18next.t('validRss');
-        successInput(state);
+        successInput(state, elements);
       }
       if (state.form.valid === false) {
-        dangerInput(state);
+        dangerInput(state, elements);
       }
       return '';
     });
-    state.elements.form.addEventListener('submit', async (e) => {
+    elements.form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = new FormData(e.target);
       const url = data.get('url').trim();
-      getRss(url, state, watchedState, i18next);
+      getRss(url, state, watchedState, i18next, elements);
     });
-    state.elements.posts.addEventListener('click', (e) => {
+    elements.posts.addEventListener('click', (e) => {
       const { id } = e.target;
       if (id !== '') {
         watchedState.clickPosts.push(id);
