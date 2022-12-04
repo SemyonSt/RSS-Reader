@@ -2,7 +2,7 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 
 import {
-  successInput, dangerInput, loadingProcess, openPost, openModal, addPost,
+  successInput, dangerInput, loadingProcess, lookAtPost, openModal, renderPost,
 } from './view';
 import getRss from './controller';
 import ru from './locales/index';
@@ -40,11 +40,11 @@ const runApp = async () => {
       loadingProcess(state);
 
       if (path === 'modal') {
-        openPost(state);
+        lookAtPost(state);
         openModal(state);
       }
       if (path === 'posts') {
-        addPost(state, i18next);
+        renderPost(state, i18next);
       }
       if (state.form.valid === true) {
         watchedState.message = i18next.t('validRss');

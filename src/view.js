@@ -42,13 +42,13 @@ export const openModal = (state) => {
   });
 };
 
-export const openPost = (state) => {
+export const lookAtPost = (state) => {
   state.clickPosts.forEach((i) => {
     const element = document.querySelector(`[id="${i}"]`);
     element.classList.replace('fw-bold', 'fw-normal');
   });
 };
-export const addPost = (state, i18n) => {
+export const renderPost = (state, i18n) => {
   const ul = document.querySelector('ul');
 
   ul.innerHTML = '';
@@ -74,10 +74,10 @@ export const addPost = (state, i18n) => {
     li.append(a, button);
     ul.append(li);
   });
-  openPost(state);
+  lookAtPost(state);
 };
 
-export const addFeeds = (state, i18n) => {
+export const renderFeeds = (state, i18n) => {
   const divBorder = document.createElement('div');
   divBorder.classList.add('card', 'border-0');
   if (state.postsName.length <= 1) {
@@ -112,7 +112,7 @@ export const addFeeds = (state, i18n) => {
   });
 };
 
-export const addNewPosts = (state, i18n) => {
+export const renderNewPosts = (state, i18n) => {
   const divBorder = document.createElement('div');
   divBorder.classList.add('card', 'border-0');
   const ul = document.createElement('ul');
@@ -150,7 +150,7 @@ export const addNewPosts = (state, i18n) => {
     a.id = element.id;
     button.id = element.id;
     li.append(a, button);
-    ulPost.append(li);
+    ulPost.prepend(li);
   });
   divBorder.append(ul);
 };

@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import axios from 'axios';
 import * as _ from 'lodash';
 import { uniqueId } from 'lodash';
-import { addNewPosts, addFeeds } from './view';
+import { renderNewPosts, renderFeeds } from './view';
 
 const validate = async (i18n, watchedState, url) => {
   yup.setLocale({
@@ -79,8 +79,8 @@ const getRss = (url, state, watchedState, i18n) => {
       });
 
       watchedState.postsName.push(parse(data.contents).feedName);
-      addNewPosts(state, i18n);
-      addFeeds(state, i18n);
+      renderNewPosts(state, i18n);
+      renderFeeds(state, i18n);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
       watchedState.form.processState = 'work';
