@@ -86,25 +86,23 @@ const getRss = (url, state, watchedState, i18n, elements) => {
       watchedState.form.valid = true;
       watchedState.form.loadingProcessState = 'initial';
       watchedState.form.links.push(url);
-
-      // watchedState.message = i18n.t('validRss');
+      watchedState.message = 'validRss';
     })
     .catch((err) => {
       watchedState.form.loadingProcessState = 'initial';
       watchedState.form.valid = false;
-      console.log(err.error);
       switch (err.message) {
         case ('notValidDouble'):
-          watchedState.message = i18n.t('notValidDouble');
+          watchedState.message = 'notValidDouble';
           break;
         case ('notValidUrl'):
-          watchedState.message = i18n.t('notValidUrl');
+          watchedState.message = 'notValidUrl';
           break;
         case ('notValidRss'):
-          watchedState.message = i18n.t('notValidRss');
+          watchedState.message = 'notValidRss';
           break;
         case ('Network response was not ok.'):
-          watchedState.message = i18n.t('networkError');
+          watchedState.message = 'networkError';
           break;
         default:
           break;

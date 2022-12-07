@@ -45,13 +45,14 @@ const runApp = async () => {
       }
       if (path === 'posts') {
         renderPost(state, i18next);
+        // renderNewPosts(state, i18next, elements);
+        // renderFeeds(state, i18next, elements);
       }
       if (state.form.valid === true) {
-        watchedState.message = i18next.t('validRss');
-        successInput(state, elements);
+        successInput(state, elements, i18next);
       }
       if (state.form.valid === false) {
-        dangerInput(state, elements);
+        dangerInput(state, elements, i18next);
       }
       return '';
     });
