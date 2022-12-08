@@ -2,7 +2,8 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 
 import {
-  successInput, dangerInput, loadingProcess, lookAtPost, openModal, renderPost,
+  successInput, dangerInput, loadingProcess, lookAtPost, openModal,
+  renderNewPosts, renderFeeds,
 } from './view';
 import getRss from './controller';
 import ru from './locales/index';
@@ -43,10 +44,14 @@ const runApp = async () => {
         lookAtPost(state);
         openModal(state);
       }
-      if (path === 'posts') {
-        renderPost(state, i18next);
-        // renderNewPosts(state, i18next, elements);
+      if (path === 'postsName') {
+        // renderPost(state, i18next); // не могу затестить т.к. RSS example не работает
         // renderFeeds(state, i18next, elements);
+        renderNewPosts(state, i18next, elements);
+      }
+      if (path === 'feedsName') {
+        // renderNewPosts(state, i18next, elements);
+        renderFeeds(state, i18next, elements);
       }
       if (state.form.valid === true) {
         successInput(state, elements, i18next);

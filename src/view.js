@@ -118,7 +118,7 @@ export const renderNewPosts = (state, i18n, elements) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
 
-  if (state.feedsName.length <= 1) {
+  if (state.postsName.length <= 1) {
     const divBody = document.createElement('div');
     divBody.classList.add('card-body');
     const h2P = document.createElement('h2');

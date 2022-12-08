@@ -2,7 +2,6 @@ import * as yup from 'yup';
 import axios from 'axios';
 import * as _ from 'lodash';
 import { uniqueId } from 'lodash';
-import { renderNewPosts, renderFeeds } from './view';
 
 const validate = async (link, url) => {
   yup.setLocale({
@@ -66,7 +65,7 @@ const updatePost = (url, state, watchedState, i18n) => {
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
 };
 
-const getRss = (url, state, watchedState, i18n, elements) => {
+const getRss = (url, state, watchedState, i18n) => {
   const link = watchedState.form.links;
   validate(link, url)
     .then(() => {
@@ -75,16 +74,16 @@ const getRss = (url, state, watchedState, i18n, elements) => {
     })
     .then((data) => {
       parse(data.contents).feedPosts.forEach((i) => {
-        state.postsName.push(i);
         i.id = uniqueId();
+        watchedState.postsName.push(i);
       });
 
       watchedState.feedsName.push(parse(data.contents).feedName);
-      renderNewPosts(state, i18n, elements);
-      renderFeeds(state, i18n, elements);
+      watchedState.form.loadingProcessState = 'initial';
+      // renderNewPosts(state, i18n, elements);
+      // renderFeeds(state, i18n, elements);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
-      watchedState.form.loadingProcessState = 'initial';
       watchedState.form.links.push(url);
       watchedState.message = 'validRss';
     })
@@ -107,7 +106,6 @@ const getRss = (url, state, watchedState, i18n, elements) => {
         default:
           break;
       }
-      // watchedState.message = err.message;
     });
 };
 export default getRss;
