@@ -2,8 +2,9 @@ import * as yup from 'yup';
 import axios from 'axios';
 import * as _ from 'lodash';
 import { uniqueId } from 'lodash';
+import parser from './parser';
 
-const validate = async (link, url) => {
+const validate = async (url, listLoadedLinks) => {
   yup.setLocale({
     mixed: {
       notOneOf: 'notValidDouble',
@@ -13,95 +14,66 @@ const validate = async (link, url) => {
     },
   });
 
-  const schema = yup.string().url().required().notOneOf(link);
+  const schema = yup.string().url().required().notOneOf(listLoadedLinks);
   return schema.validate(url);
-};
-
-const parse = (data) => {
-  const parser = new DOMParser();
-  const dom = parser.parseFromString(data, 'application/xml');
-  const parseError = dom.querySelector('parsererror');
-  if (parseError) {
-    const error = new Error('notValidRss');
-    error.isParsingError = true;
-    throw error;
-  }
-  const feedName = {
-    title: dom.querySelector('title').innerHTML,
-    description: dom.querySelector('description').innerHTML,
-  };
-
-  const domItem = dom.querySelectorAll('item');
-  const feedPosts = Array.from(domItem).map((item) => {
-    const titles = item.querySelector('title').innerHTML;
-    const links = item.querySelector('link').innerHTML;
-    const descriptions = item.querySelector('description').innerHTML;
-    return { titles, links, descriptions };
-  });
-  return { feedName, feedPosts };
 };
 
 const getData = (url) => axios
   .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
-  .then((response) => response.data)
-  .catch(() => { throw new Error('Network response was not ok.'); });
+  .then((response) => response.data);
 
 const uniq = (arr1, arr2) => _.differenceBy(arr1, arr2, 'titles');
 
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
-      const parsedData = parse(data.contents);
-      const newPost = uniq(parsedData.feedPosts, watchedState.postsName);
-      if (newPost.length >= 1) {
+      const parsedData = parser(data.contents);
+      const newPosts = uniq(parsedData.feedPosts, watchedState.dataPosts);
+      if (newPosts.length >= 1) {
         watchedState.form.valid = '';
-        newPost.forEach((element) => {
+        newPosts.forEach((element) => {
           element.id = uniqueId();
-          // watchedState.postsName.push(element);
         });
-        watchedState.postsName = [newPost, ...watchedState.postsName].flat();
+        watchedState.dataPosts = [...watchedState.dataPosts, ...newPosts];
       }
     })
     .then(setTimeout(() => { updatePost(url, state, watchedState, i18n); }, 5000));
 };
 
 const getRss = (url, state, watchedState, i18n) => {
-  const link = watchedState.form.links;
-  validate(link, url)
+  const listLoadedLinks = watchedState.loadedLinks;
+  validate(url, listLoadedLinks)
     .then(() => {
       watchedState.form.loadingProcessState = 'loading';
       return getData(url);
     })
     .then((data) => {
-      parse(data.contents).feedPosts.forEach((i) => {
+      parser(data.contents).feedPosts.forEach((i) => {
         i.id = uniqueId();
-        watchedState.postsName.push(i);
+        watchedState.dataPosts.push(i);
       });
 
-      watchedState.feedsName.push(parse(data.contents).feedName);
+      watchedState.dataFeeds.push(parser(data.contents).feedName);
       watchedState.form.loadingProcessState = 'initial';
-      // renderNewPosts(state, i18n, elements);
-      // renderFeeds(state, i18n, elements);
       updatePost(url, state, watchedState, i18n);
       watchedState.form.valid = true;
-      watchedState.form.links.push(url);
-      watchedState.message = 'validRss';
+      watchedState.loadedLinks.push(url);
     })
     .catch((err) => {
       watchedState.form.loadingProcessState = 'initial';
       watchedState.form.valid = false;
       switch (err.message) {
         case ('notValidDouble'):
-          watchedState.message = 'notValidDouble';
+          watchedState.messageError = 'notValidDouble';
           break;
         case ('notValidUrl'):
-          watchedState.message = 'notValidUrl';
+          watchedState.messageError = 'notValidUrl';
           break;
-        case ('notValidRss'):
-          watchedState.message = 'notValidRss';
+        case ('Parser Error'):
+          watchedState.messageError = 'notValidRss';
           break;
-        case ('Network response was not ok.'):
-          watchedState.message = 'networkError';
+        case ('Network Error'):
+          watchedState.messageError = 'networkError';
           break;
         default:
           break;

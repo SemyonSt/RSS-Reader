@@ -8,19 +8,18 @@ import {
 import getRss from './controller';
 import ru from './locales/index';
 
-const runApp = async () => {
+const app = async () => {
   const state = {
     form: {
       valid: false,
       loadingProcessState: 'initial',
-      processError: null,
-      links: [],
     },
-    message: '',
-    postsName: [],
-    feedsName: [],
-    clickPosts: [],
-    modal: null,
+    loadedLinks: [],
+    messageError: '',
+    dataPosts: [],
+    dataFeeds: [],
+    openedPosts: [],
+    viewModal: null,
   };
   const elements = {
     form: document.querySelector('.rss-form'),
@@ -40,16 +39,16 @@ const runApp = async () => {
     const watchedState = onChange(state, (path) => {
       loadingProcess(state, elements);
 
-      if (path === 'modal') {
+      if (path === 'viewModal') {
         lookAtPost(state);
         openModal(state);
       }
-      if (path === 'postsName') {
+      if (path === 'dataPosts') {
         // renderPost(state, i18next); // не могу затестить т.к. RSS example не работает
         // renderFeeds(state, i18next, elements);
         renderNewPosts(state, i18next, elements);
       }
-      if (path === 'feedsName') {
+      if (path === 'dataFeeds') {
         // renderNewPosts(state, i18next, elements);
         renderFeeds(state, i18next, elements);
       }
@@ -70,11 +69,11 @@ const runApp = async () => {
     elements.posts.addEventListener('click', (e) => {
       const { id } = e.target;
       if (id !== '') {
-        watchedState.clickPosts.push(id);
-        watchedState.modal = id;
+        watchedState.openedPosts.push(id);
+        watchedState.viewModal = id;
       }
     });
   });
 };
 
-export default runApp();
+export default app;
