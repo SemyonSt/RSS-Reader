@@ -1,4 +1,4 @@
-export default (data) => {
+export default (data, url) => {
   const parser = new DOMParser();
   const dom = parser.parseFromString(data, 'application/xml');
   const parseError = dom.querySelector('parsererror');
@@ -10,6 +10,7 @@ export default (data) => {
   const feedName = {
     title: dom.querySelector('title').textContent,
     description: dom.querySelector('description').textContent,
+    link: url,
   };
 
   const domItem = dom.querySelectorAll('item');

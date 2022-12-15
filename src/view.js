@@ -5,7 +5,7 @@ export const dangerInput = (state, elements, i18n) => {
   elements.input.classList.replace('is-valid', 'is-invalid');
 };
 
-export const successInput = (state, elements, i18n) => {
+export const successInput = (elements, i18n) => {
   elements.feedBack.textContent = i18n.t('validRss');
   elements.feedBack.classList.replace('text-danger', 'text-success');
   elements.input.classList.add('is-valid');

@@ -14,7 +14,6 @@ const app = async () => {
       valid: false,
       loadingProcessState: 'initial',
     },
-    loadedLinks: [],
     messageError: '',
     dataPosts: [],
     dataFeeds: [],
@@ -37,23 +36,24 @@ const app = async () => {
     resources: { ru },
   }).then(() => {
     const watchedState = onChange(state, (path) => {
-      loadingProcess(state, elements);
+      // loadingProcess(state, elements);
 
       if (path === 'viewModal') {
         lookAtPost(state);
         openModal(state);
       }
       if (path === 'dataPosts') {
-        // renderPost(state, i18next); // не могу затестить т.к. RSS example не работает
-        // renderFeeds(state, i18next, elements);
         renderNewPosts(state, i18next, elements);
       }
       if (path === 'dataFeeds') {
-        // renderNewPosts(state, i18next, elements);
         renderFeeds(state, i18next, elements);
       }
+      if (path === 'form.loadingProcessState') {
+        loadingProcess(state, elements);
+      }
+
       if (state.form.valid === true) {
-        successInput(state, elements, i18next);
+        successInput(elements, i18next);
       }
       if (state.form.valid === false) {
         dangerInput(state, elements, i18next);
@@ -64,6 +64,8 @@ const app = async () => {
       e.preventDefault();
       const data = new FormData(e.target);
       const url = data.get('url').trim();
+      watchedState.form.valid = false;
+      watchedState.form.loadingProcessState = 'loading';
       getRss(url, state, watchedState, i18next, elements);
     });
     elements.posts.addEventListener('click', (e) => {

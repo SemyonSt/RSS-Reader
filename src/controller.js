@@ -27,7 +27,7 @@ const uniq = (arr1, arr2) => _.differenceBy(arr1, arr2, 'titles');
 const updatePost = (url, state, watchedState, i18n) => {
   getData(url)
     .then((data) => {
-      const parsedData = parser(data.contents);
+      const parsedData = parser(data.contents, url);
       const newPosts = uniq(parsedData.feedPosts, watchedState.dataPosts);
       if (newPosts.length >= 1) {
         watchedState.form.valid = '';
@@ -41,27 +41,27 @@ const updatePost = (url, state, watchedState, i18n) => {
 };
 
 const getRss = (url, state, watchedState, i18n) => {
-  const listLoadedLinks = watchedState.loadedLinks;
+  const listLoadedLinks = watchedState.dataFeeds.map((feed) => feed.link);
   validate(url, listLoadedLinks)
-    .then(() => {
-      watchedState.form.loadingProcessState = 'loading';
-      return getData(url);
-    })
+
+    .then(() => getData(url))
     .then((data) => {
-      parser(data.contents).feedPosts.forEach((i) => {
+      watchedState.form.valid = true;
+      const dataParse = parser(data.contents, url);
+      dataParse.feedPosts.forEach((i) => {
         i.id = uniqueId();
         watchedState.dataPosts.push(i);
       });
 
-      watchedState.dataFeeds.push(parser(data.contents).feedName);
+      watchedState.dataFeeds.push(dataParse.feedName);
+
       watchedState.form.loadingProcessState = 'initial';
       updatePost(url, state, watchedState, i18n);
-      watchedState.form.valid = true;
-      watchedState.loadedLinks.push(url);
     })
     .catch((err) => {
-      watchedState.form.loadingProcessState = 'initial';
       watchedState.form.valid = false;
+      watchedState.form.loadingProcessState = 'initial';
+
       switch (err.message) {
         case ('notValidDouble'):
           watchedState.messageError = 'notValidDouble';
